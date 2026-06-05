@@ -17,6 +17,8 @@ export interface Crate {
   name: string;
   depends_on: string[];
   description: string | null;
+  // Items defined at the crate root. Present only when indexed with --with-items.
+  items?: Item[];
   modules: Module[];
 }
 
@@ -25,6 +27,18 @@ export interface Module {
   file: string;
   submodules: string[];
   description: string | null;
+  // The module's items. Present only when indexed with --with-items.
+  items?: Item[];
+}
+
+export type Visibility = 'public' | 'private';
+
+export interface Item {
+  name: string;
+  kind: string;
+  signature: string | null;
+  docs: string | null;
+  visibility: Visibility;
 }
 
 // The major version of the data file format this app understands.

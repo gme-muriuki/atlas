@@ -1,5 +1,5 @@
 {
-  "format_version": "0.1.0",
+  "format_version": "0.2.0",
   "source": {
     "project": "pragmatic-rustacean/symposium",
     "commit": "07facb61",
@@ -21,7 +21,184 @@
             "agents::mcp_server_registration",
             "agents::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Agent",
+              "kind": "enum",
+              "signature": "enum Agent",
+              "docs": "Supported AI agents.",
+              "visibility": "public"
+            },
+            {
+              "name": "copilot_hook_entries",
+              "kind": "function",
+              "signature": "fn copilot_hook_entries() -> Vec<(&str, Value)>",
+              "docs": "Copilot hook entries shared by global and project registration.",
+              "visibility": "private"
+            },
+            {
+              "name": "ensure_claude_hook_entry",
+              "kind": "function",
+              "signature": "fn ensure_claude_hook_entry(hooks: &mut Map<String, Value>, event: &str, command: &str) -> bool",
+              "docs": "Returns `true` if a new entry was added, `false` if already registered.",
+              "visibility": "private"
+            },
+            {
+              "name": "ensure_codex_hook_entry",
+              "kind": "function",
+              "signature": "fn ensure_codex_hook_entry(hooks: &mut Map<String, Value>, event: &str, command: &str) -> bool",
+              "docs": "Returns `true` if a new entry was added, `false` if already registered.",
+              "visibility": "private"
+            },
+            {
+              "name": "ensure_gemini_hook_entry",
+              "kind": "function",
+              "signature": "fn ensure_gemini_hook_entry(hooks: &mut Map<String, Value>, event: &str, command: &str) -> bool",
+              "docs": "Returns `true` if a new entry was added, `false` if already registered.",
+              "visibility": "private"
+            },
+            {
+              "name": "ensure_kiro_hook_entry",
+              "kind": "function",
+              "signature": "fn ensure_kiro_hook_entry(hooks: &mut Map<String, Value>, event: &str, entry: &Value) -> bool",
+              "docs": "Returns `true` if a new entry was added, `false` if already registered.",
+              "visibility": "private"
+            },
+            {
+              "name": "event_to_cli_arg",
+              "kind": "function",
+              "signature": "fn event_to_cli_arg(event: &str) -> &str",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "kiro_hook_entries",
+              "kind": "function",
+              "signature": "fn kiro_hook_entries() -> Vec<(&str, Value)>",
+              "docs": "Kiro hook entries for all supported events.",
+              "visibility": "private"
+            },
+            {
+              "name": "load_json_or_empty",
+              "kind": "function",
+              "signature": "fn load_json_or_empty(path: &Path) -> Result<Value>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "merge_kiro_hooks",
+              "kind": "function",
+              "signature": "fn merge_kiro_hooks(config: &mut Value, default_name: &str) -> (bool, Vec<&str>)",
+              "docs": "Merge Kiro hook entries into a JSON config, returning the list of newly added events.\n\nAlso ensures the required `name` field is present (Kiro validates it on load).\nReturns `(changed, added_events)` — `changed` is true if any field was\ninserted (not just hooks), so the caller knows to save the file.",
+              "visibility": "private"
+            },
+            {
+              "name": "register_claude_hooks",
+              "kind": "function",
+              "signature": "fn register_claude_hooks(settings_path: &Path, out: &Output) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "register_codex_hooks",
+              "kind": "function",
+              "signature": "fn register_codex_hooks(hooks_path: &Path, out: &Output) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "register_copilot_hooks",
+              "kind": "function",
+              "signature": "fn register_copilot_hooks(hooks_dir: &Path, out: &Output) -> Result<()>",
+              "docs": "Register hooks in a project-level Copilot hooks directory (`.github/hooks/`).",
+              "visibility": "private"
+            },
+            {
+              "name": "register_copilot_hooks_global",
+              "kind": "function",
+              "signature": "fn register_copilot_hooks_global(config_path: &Path, out: &Output) -> Result<()>",
+              "docs": "Register hooks in the global Copilot config file (`~/.copilot/config.json`).",
+              "visibility": "private"
+            },
+            {
+              "name": "register_gemini_hooks",
+              "kind": "function",
+              "signature": "fn register_gemini_hooks(settings_path: &Path, out: &Output) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "register_kiro_hooks",
+              "kind": "function",
+              "signature": "fn register_kiro_hooks(agents_dir: &Path, out: &Output) -> Result<()>",
+              "docs": "Register hooks by creating a Kiro agent file (`.kiro/agents/symposium.json`).",
+              "visibility": "private"
+            },
+            {
+              "name": "save_json",
+              "kind": "function",
+              "signature": "fn save_json(path: &Path, value: &Value) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_claude_hooks",
+              "kind": "function",
+              "signature": "fn unregister_claude_hooks(settings_path: &Path, out: &Output)",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_codex_hooks",
+              "kind": "function",
+              "signature": "fn unregister_codex_hooks(hooks_path: &Path, out: &Output)",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_copilot_hooks",
+              "kind": "function",
+              "signature": "fn unregister_copilot_hooks(hooks_dir: &Path, out: &Output)",
+              "docs": "Remove symposium hooks from a Copilot project hooks directory.",
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_copilot_hooks_global",
+              "kind": "function",
+              "signature": "fn unregister_copilot_hooks_global(config_path: &Path, out: &Output)",
+              "docs": "Remove symposium hooks from the global Copilot config.",
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_flat_hooks",
+              "kind": "function",
+              "signature": "fn unregister_flat_hooks(config_path: &Path, command_key: &str, out: &Output)",
+              "docs": "Remove symposium hooks from a JSON config where entries are flat objects\nwith the command in `command_key` (e.g., `\"command\"` for Kiro, `\"bash\"` for Copilot).\n\nContrasts with `unregister_settings_hooks` which handles the nested\n`{ \"hooks\": [{ \"command\": \"...\" }] }` structure used by Claude/Gemini/Codex.",
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_gemini_hooks",
+              "kind": "function",
+              "signature": "fn unregister_gemini_hooks(settings_path: &Path, out: &Output)",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_kiro_hooks",
+              "kind": "function",
+              "signature": "fn unregister_kiro_hooks(agents_dir: &Path, out: &Output)",
+              "docs": "Remove the symposium agent file from a Kiro agents directory.",
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_settings_hooks",
+              "kind": "function",
+              "signature": "fn unregister_settings_hooks(settings_path: &Path, command_prefix: &str, out: &Output)",
+              "docs": "Remove symposium hooks from a Claude/Gemini settings.json file.\nShared by both Claude and Gemini since they use the same structure.",
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "agents::mcp_server_registration",
@@ -29,7 +206,149 @@
           "submodules": [
             "agents::mcp_server_registration::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "UpsertResult",
+              "kind": "enum",
+              "signature": "enum UpsertResult",
+              "docs": "Result of upserting an MCP server entry.",
+              "visibility": "private"
+            },
+            {
+              "name": "register_claude_mcp_servers",
+              "kind": "function",
+              "signature": "fn register_claude_mcp_servers(path: &Path, servers: &[McpServer], out: &Output) -> Result<()>",
+              "docs": "Claude Code: `mcpServers.<name>` in settings.json",
+              "visibility": "private"
+            },
+            {
+              "name": "register_codex_mcp_servers",
+              "kind": "function",
+              "signature": "fn register_codex_mcp_servers(config_path: &Path, servers: &[McpServer], out: &Output) -> Result<()>",
+              "docs": "Codex CLI: `[mcp_servers.<name>]` in config.toml",
+              "visibility": "private"
+            },
+            {
+              "name": "register_copilot_mcp_servers",
+              "kind": "function",
+              "signature": "fn register_copilot_mcp_servers(path: &Path, servers: &[McpServer], out: &Output) -> Result<()>",
+              "docs": "Copilot: top-level `<name>` in mcp.json",
+              "visibility": "private"
+            },
+            {
+              "name": "register_gemini_mcp_servers",
+              "kind": "function",
+              "signature": "fn register_gemini_mcp_servers(path: &Path, servers: &[McpServer], out: &Output) -> Result<()>",
+              "docs": "Gemini CLI: same format as Claude (`mcpServers.<name>`)",
+              "visibility": "private"
+            },
+            {
+              "name": "register_goose_mcp_servers",
+              "kind": "function",
+              "signature": "fn register_goose_mcp_servers(config_path: &Path, servers: &[McpServer], out: &Output) -> Result<()>",
+              "docs": "Goose: `extensions.<name>` in config.yaml (string manipulation to preserve comments)",
+              "visibility": "private"
+            },
+            {
+              "name": "register_json_mcp_servers",
+              "kind": "function",
+              "signature": "fn register_json_mcp_servers(config_path: &Path, servers: &[McpServer], container_key: Option<&str>, out: &Output) -> Result<()>",
+              "docs": "Register MCP servers into a JSON config file under a given container key.\n\nIf `container_key` is `Some(\"mcpServers\")`, entries go under `config[\"mcpServers\"][name]`.\nIf `None`, entries go at the top level `config[name]`.",
+              "visibility": "private"
+            },
+            {
+              "name": "register_kiro_mcp_servers",
+              "kind": "function",
+              "signature": "fn register_kiro_mcp_servers(path: &Path, servers: &[McpServer], out: &Output) -> Result<()>",
+              "docs": "Kiro: `mcpServers.<name>` in mcp.json",
+              "visibility": "private"
+            },
+            {
+              "name": "register_opencode_mcp_servers",
+              "kind": "function",
+              "signature": "fn register_opencode_mcp_servers(path: &Path, servers: &[McpServer], out: &Output) -> Result<()>",
+              "docs": "OpenCode: `mcp.<name>` in opencode.json",
+              "visibility": "private"
+            },
+            {
+              "name": "server_name",
+              "kind": "function",
+              "signature": "fn server_name(server: &McpServer) -> &str",
+              "docs": "Extract the name from any McpServer variant.",
+              "visibility": "private"
+            },
+            {
+              "name": "server_to_json",
+              "kind": "function",
+              "signature": "fn server_to_json(server: &McpServer) -> Value",
+              "docs": "Convert an McpServer to the JSON value agents expect in their config.\n\nStdio: `{\"command\": \"...\", \"args\": [...], \"env\": [...]}`\nHttp/Sse: `{\"url\": \"...\", \"headers\": [...]}`\n\n`env` and `headers` are omitted when empty.",
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_claude_mcp_servers",
+              "kind": "function",
+              "signature": "fn unregister_claude_mcp_servers(path: &Path, names: &[&str], out: &Output) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_codex_mcp_servers",
+              "kind": "function",
+              "signature": "fn unregister_codex_mcp_servers(config_path: &Path, names: &[&str], out: &Output) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_copilot_mcp_servers",
+              "kind": "function",
+              "signature": "fn unregister_copilot_mcp_servers(path: &Path, names: &[&str], out: &Output) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_gemini_mcp_servers",
+              "kind": "function",
+              "signature": "fn unregister_gemini_mcp_servers(path: &Path, names: &[&str], out: &Output) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_goose_mcp_servers",
+              "kind": "function",
+              "signature": "fn unregister_goose_mcp_servers(config_path: &Path, names: &[&str], out: &Output) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_json_mcp_servers",
+              "kind": "function",
+              "signature": "fn unregister_json_mcp_servers(config_path: &Path, names: &[&str], container_key: Option<&str>, out: &Output) -> Result<()>",
+              "docs": "Remove MCP server entries from a JSON config file.",
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_kiro_mcp_servers",
+              "kind": "function",
+              "signature": "fn unregister_kiro_mcp_servers(path: &Path, names: &[&str], out: &Output) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "unregister_opencode_mcp_servers",
+              "kind": "function",
+              "signature": "fn unregister_opencode_mcp_servers(path: &Path, names: &[&str], out: &Output) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "upsert_json_mcp_entry",
+              "kind": "function",
+              "signature": "fn upsert_json_mcp_entry(container: &mut Value, name: &str, expected: &Value) -> UpsertResult",
+              "docs": "Upsert a single MCP server entry into a JSON object container.",
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "agents::mcp_server_registration::tests",
@@ -47,7 +366,44 @@
           "path": "cli",
           "file": "src/cli.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Cli",
+              "kind": "struct",
+              "signature": "struct Cli",
+              "docs": "Parsed CLI arguments.",
+              "visibility": "public"
+            },
+            {
+              "name": "Commands",
+              "kind": "enum",
+              "signature": "enum Commands",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "PluginCommand",
+              "kind": "enum",
+              "signature": "enum PluginCommand",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "builtin_audience",
+              "kind": "function",
+              "signature": "fn builtin_audience(name: &str) -> Option<Audience>",
+              "docs": "Audience section a built-in subcommand belongs to in `--help`.\n\n`None` means the subcommand is hidden (omitted from help entirely).\nPlugin-vended subcommands carry their own audience on the manifest;\nthis only covers the static `Commands` variants above.",
+              "visibility": "public"
+            },
+            {
+              "name": "run",
+              "kind": "function",
+              "signature": "fn run(sym: &mut Symposium, cmd: Commands, cwd: &Path, out: &Output) -> Result<()>",
+              "docs": "Run a parsed CLI command.\n\n`cwd` is the working directory for commands that need it (sync, start, crate).\nThe binary passes `std::env::current_dir()`; tests pass the fixture workspace root.",
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "config",
@@ -55,7 +411,128 @@
           "submodules": [
             "config::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "AgentEntry",
+              "kind": "struct",
+              "signature": "struct AgentEntry",
+              "docs": "An `[[agent]]` entry — just identifies an agent by name.",
+              "visibility": "public"
+            },
+            {
+              "name": "AutoUpdate",
+              "kind": "enum",
+              "signature": "enum AutoUpdate",
+              "docs": "Auto-update behavior for the symposium binary.",
+              "visibility": "public"
+            },
+            {
+              "name": "BUILTIN_RECOMMENDATIONS_URL",
+              "kind": "const",
+              "signature": "const BUILTIN_RECOMMENDATIONS_URL: &str",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "Config",
+              "kind": "struct",
+              "signature": "struct Config",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "DefaultsConfig",
+              "kind": "struct",
+              "signature": "struct DefaultsConfig",
+              "docs": "Controls which built-in plugin sources are enabled.",
+              "visibility": "public"
+            },
+            {
+              "name": "HookScope",
+              "kind": "enum",
+              "signature": "enum HookScope",
+              "docs": "Where agent hooks are installed.",
+              "visibility": "public"
+            },
+            {
+              "name": "LoggingConfig",
+              "kind": "struct",
+              "signature": "struct LoggingConfig",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "PluginSourceConfig",
+              "kind": "struct",
+              "signature": "struct PluginSourceConfig",
+              "docs": "A configured plugin source — either a git repository or a local path.",
+              "visibility": "public"
+            },
+            {
+              "name": "ResolvedPluginSource",
+              "kind": "struct",
+              "signature": "struct ResolvedPluginSource",
+              "docs": "A plugin source together with its base directory for resolving relative paths.",
+              "visibility": "public"
+            },
+            {
+              "name": "Symposium",
+              "kind": "struct",
+              "signature": "struct Symposium",
+              "docs": "Full application context: parsed config + resolved directory paths.\n\nThread `&Symposium` through all call sites instead of using global state.",
+              "visibility": "public"
+            },
+            {
+              "name": "default_home",
+              "kind": "function",
+              "signature": "fn default_home() -> PathBuf",
+              "docs": "Returns the default symposium home directory (~/.symposium).",
+              "visibility": "private"
+            },
+            {
+              "name": "default_level",
+              "kind": "function",
+              "signature": "fn default_level() -> String",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "default_true",
+              "kind": "function",
+              "signature": "fn default_true() -> bool",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "load_config_from",
+              "kind": "function",
+              "signature": "fn load_config_from(config_dir: &Path) -> Config",
+              "docs": "Load config from a config directory.",
+              "visibility": "private"
+            },
+            {
+              "name": "resolve_cache_dir",
+              "kind": "function",
+              "signature": "fn resolve_cache_dir(config_dir: &Path) -> PathBuf",
+              "docs": "Resolve cache dir from environment.",
+              "visibility": "private"
+            },
+            {
+              "name": "resolve_config_dir_from_env",
+              "kind": "function",
+              "signature": "fn resolve_config_dir_from_env() -> PathBuf",
+              "docs": "Resolve config dir from environment variables.",
+              "visibility": "private"
+            },
+            {
+              "name": "resolve_logs_dir",
+              "kind": "function",
+              "signature": "fn resolve_logs_dir(config_dir: &Path) -> PathBuf",
+              "docs": "Resolve logs dir from environment.\n\nResolution: SYMPOSIUM_HOME/logs → XDG_STATE_HOME/symposium/logs → config_dir/logs.",
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "config::tests",
@@ -67,7 +544,23 @@
           "path": "crate_command",
           "file": "src/crate_command.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "DispatchResult",
+              "kind": "enum",
+              "signature": "enum DispatchResult",
+              "docs": "Result of dispatching a command.",
+              "visibility": "public"
+            },
+            {
+              "name": "dispatch_crate",
+              "kind": "function",
+              "signature": "fn dispatch_crate(_sym: &Symposium, name: &str, version: Option<&str>, cwd: &Path) -> DispatchResult",
+              "docs": null,
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "crate_metadata",
@@ -75,7 +568,79 @@
           "submodules": [
             "crate_metadata::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "CargoPackage",
+              "kind": "struct",
+              "signature": "struct CargoPackage",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "CargoToml",
+              "kind": "struct",
+              "signature": "struct CargoToml",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "CrateRef",
+              "kind": "struct",
+              "signature": "struct CrateRef",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "CrateSkillMetadata",
+              "kind": "struct",
+              "signature": "struct CrateSkillMetadata",
+              "docs": "Parsed `[package.metadata.symposium]` section.",
+              "visibility": "public"
+            },
+            {
+              "name": "PackageMetadata",
+              "kind": "struct",
+              "signature": "struct PackageMetadata",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "SkillEntry",
+              "kind": "struct",
+              "signature": "struct SkillEntry",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "SkillSource",
+              "kind": "enum",
+              "signature": "enum SkillSource",
+              "docs": "Where a crate's skills live.",
+              "visibility": "public"
+            },
+            {
+              "name": "SymposiumMetadata",
+              "kind": "struct",
+              "signature": "struct SymposiumMetadata",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "parse_crate_metadata",
+              "kind": "function",
+              "signature": "fn parse_crate_metadata(cargo_toml_path: &Path) -> Result<Option<CrateSkillMetadata>>",
+              "docs": "Parse the `[package.metadata.symposium]` section from a Cargo.toml file.\n\nReturns:\n- `Ok(None)` if there is no `[package.metadata.symposium]` section.\n- `Ok(Some(meta))` if the section is present (even if `skills = []`).\n- `Err(...)` on malformed entries.",
+              "visibility": "public"
+            },
+            {
+              "name": "parse_crate_metadata_str",
+              "kind": "function",
+              "signature": "fn parse_crate_metadata_str(content: &str) -> Result<Option<CrateSkillMetadata>>",
+              "docs": "Parse from a TOML string (for testing).",
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "crate_metadata::tests",
@@ -91,19 +656,102 @@
             "crate_sources::probe",
             "crate_sources::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "FetchResult",
+              "kind": "struct",
+              "signature": "struct FetchResult",
+              "docs": "Result of fetching a crate's sources.",
+              "visibility": "public"
+            },
+            {
+              "name": "RustCrateFetch",
+              "kind": "struct",
+              "signature": "struct RustCrateFetch",
+              "docs": "Builder for accessing Rust crate source code.",
+              "visibility": "public"
+            },
+            {
+              "name": "normalize_crate_name",
+              "kind": "function",
+              "signature": "fn normalize_crate_name(name: &str) -> String",
+              "docs": "Normalize a crate name for hyphen/underscore-insensitive comparison.\n\nCargo treats `foo-bar` and `foo_bar` as the same crate name (published\nname on crates.io vs. Rust module identifier), so any name-equality check\nagainst a user-supplied query should go through this normalization.",
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "crate_sources::list",
           "file": "src/crate_sources/list.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "WorkspaceCrate",
+              "kind": "struct",
+              "signature": "struct WorkspaceCrate",
+              "docs": "A crate in the workspace's dependency graph.",
+              "visibility": "public"
+            },
+            {
+              "name": "load_workspace_crates",
+              "kind": "function",
+              "signature": "fn load_workspace_crates(cwd: &Path) -> Result<Vec<WorkspaceCrate>>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "workspace_crates",
+              "kind": "function",
+              "signature": "fn workspace_crates(cwd: &Path) -> Vec<WorkspaceCrate>",
+              "docs": "Load workspace crates with parsed versions and local path overrides.\n\nCombines dependency resolution and path-override detection into a single\n`cargo metadata` call. Path dependencies (those with no registry source)\nget their `path` field populated so callers can resolve them locally.",
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "crate_sources::probe",
           "file": "src/crate_sources/probe.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "fetch_sync",
+              "kind": "function",
+              "signature": "fn fetch_sync(crate_name: &str, version_req: &str) -> Result<FetchResult>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "fetch_via_cargo",
+              "kind": "function",
+              "signature": "fn fetch_via_cargo(crate_name: &str, version_req: &str) -> Result<FetchResult>",
+              "docs": "Fetch a crate via a temporary dummy cargo package.\n\n`version_req` may be any valid Cargo version requirement (e.g. `\"=1.2.3\"`,\n`\"^1.0\"`, `\"*\"`).",
+              "visibility": "public"
+            },
+            {
+              "name": "find_crate_in_metadata",
+              "kind": "function",
+              "signature": "fn find_crate_in_metadata(dir: &Path, crate_name: &str) -> Result<FetchResult>",
+              "docs": "Look up the package for `crate_name` in the metadata for `dir` and return\nits source path.",
+              "visibility": "private"
+            },
+            {
+              "name": "run_cargo_fetch",
+              "kind": "function",
+              "signature": "fn run_cargo_fetch(dir: &Path, crate_name: &str, version_req: &str) -> Result<()>",
+              "docs": "Run `cargo fetch` against the manifest at `dir/Cargo.toml`.",
+              "visibility": "private"
+            },
+            {
+              "name": "write_dummy_package",
+              "kind": "function",
+              "signature": "fn write_dummy_package(dir: &Path, crate_name: &str, version_req: &str) -> Result<()>",
+              "docs": "Write a minimal package at `dir` that depends on `crate_name = version_req`.",
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "crate_sources::tests",
@@ -117,7 +765,58 @@
           "submodules": [
             "help_render::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "AGENTS_HEADING",
+              "kind": "const",
+              "signature": "const AGENTS_HEADING: &str",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "HUMANS_HEADING",
+              "kind": "const",
+              "signature": "const HUMANS_HEADING: &str",
+              "docs": "Section headings for the audience-grouped help. Referenced by the\nSessionStart discovery hint (`crate::hook`) too, so the rendered help and\nthe prompt that points agents at it can't drift apart.",
+              "visibility": "public"
+            },
+            {
+              "name": "collect_section",
+              "kind": "function",
+              "signature": "fn collect_section(cmd: &Command, registry: &PluginRegistry, deps: &[(String, Version)], target: Audience) -> Vec<(String, String)>",
+              "docs": "Collect entries for one audience section: clap's builtins first (sorted), then plugin-vended subs whose predicates apply (sorted).",
+              "visibility": "private"
+            },
+            {
+              "name": "help_text",
+              "kind": "function",
+              "signature": "fn help_text(parse: Result<&Cli, &Error>, args: &[String], sym: &Symposium, cwd: &Path) -> Option<String>",
+              "docs": "If this invocation is a help request, return the help text to print.\n\nReturns `None` when the user wants to actually run something.\n\n- no subcommand, or the bare `help` keyword -> top-level\n- `<built-in> --help` (incl. nested and required-arg commands) -> clap's own per command help, re-rendered;\n- a plugin-vended `<name> --help` -> `None`, so dispatch forwards `--help` to the child.",
+              "visibility": "public"
+            },
+            {
+              "name": "render",
+              "kind": "function",
+              "signature": "fn render(registry: &PluginRegistry, workspace: &[WorkspaceCrate]) -> String",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "render_help",
+              "kind": "function",
+              "signature": "fn render_help(sym: &Symposium, cwd: &Path) -> String",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "subcommand_help",
+              "kind": "function",
+              "signature": "fn subcommand_help(args: &[String]) -> Option<String>",
+              "docs": "Render clap's help for the deepest built-in subcommand named in `args`, or `None` if none is present (top-level invocation, or a plugin name).",
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "help_render::tests",
@@ -131,7 +830,135 @@
           "submodules": [
             "hook::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "PluginHookOutput",
+              "kind": "enum",
+              "signature": "enum PluginHookOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ResolvedHook",
+              "kind": "struct",
+              "signature": "struct ResolvedHook",
+              "docs": "A hook prepared for dispatch — installation names looked up to concrete\n`Installation` entries, so the dispatch loop never has to scan the plugin's\ninstallations list again.",
+              "visibility": "private"
+            },
+            {
+              "name": "SpawnSpec",
+              "kind": "enum",
+              "signature": "enum SpawnSpec",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "build_spawn_spec",
+              "kind": "function",
+              "signature": "fn build_spawn_spec(sym: &Symposium, hook: &ResolvedHook) -> Result<SpawnSpec>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "discovery_hint",
+              "kind": "function",
+              "signature": "fn discovery_hint(sym: &Symposium, cwd: &Path) -> Option<String>",
+              "docs": "Suggest `cargo agents --help` when the active workspace exposes crate-aware plugin subcommands.\nReuses the help renderer's `applicable_subcommands`, so the hint fires only when there is actually something to discover; `None` otherwise.",
+              "visibility": "private"
+            },
+            {
+              "name": "dispatch_builtin",
+              "kind": "function",
+              "signature": "fn dispatch_builtin(sym: &Symposium, input: &InputEvent) -> OutputEvent",
+              "docs": "Built-in hook logic on canonical symposium types.",
+              "visibility": "public"
+            },
+            {
+              "name": "dispatch_plugin_hooks",
+              "kind": "function",
+              "signature": "fn dispatch_plugin_hooks(sym: &Symposium, host_agent: HookAgent, event: HookEvent, sym_input: &InputEvent, original_input: &dyn AgentHookInput, prior_output: Value) -> Result<Value, Vec<u8>>",
+              "docs": "Dispatch plugin hooks with format routing.\n\nAccumulates output as `serde_json::Value` in the host agent's wire format.\nWhen a plugin's format matches the host agent, input/output pass through directly.\nWhen formats differ, conversion goes through symposium canonical types.\n\nReturns `Ok(json)` on success, `Err(stderr)` on exit code 2.",
+              "visibility": "public"
+            },
+            {
+              "name": "dispatched_hooks_for_payload",
+              "kind": "function",
+              "signature": "fn dispatched_hooks_for_payload(plugins: &[ParsedPlugin], input: &InputEvent, host_agent: HookAgent) -> Vec<ResolvedHook>",
+              "docs": "Match plugin hooks against the incoming event, selecting at most one hook\nper plugin based on format priority:\n1. A hook whose format matches the host agent (native fidelity).\n2. A symposium-format hook (portable fallback).\n3. Otherwise, nothing fires for that plugin.\n\nThe resulting `ResolvedHook`s are ready to dispatch without further plugin\nlookups.",
+              "visibility": "private"
+            },
+            {
+              "name": "execute_hook",
+              "kind": "function",
+              "signature": "fn execute_hook(sym: &Symposium, agent: HookAgent, event: HookEvent, input: &str) -> Result<Vec<u8>>",
+              "docs": "Core hook pipeline: sync → parse → builtin → plugins → serialize.\n\nTakes the raw agent wire-format input, returns agent wire-format output bytes.\nCalled by both `run()` (CLI) and the test harness.",
+              "visibility": "public"
+            },
+            {
+              "name": "handle_post_tool_use",
+              "kind": "function",
+              "signature": "fn handle_post_tool_use(_sym: &Symposium, _post: &PostToolUseInput) -> OutputEvent",
+              "docs": "Handle PostToolUse: no-op for now.",
+              "visibility": "private"
+            },
+            {
+              "name": "handle_session_start",
+              "kind": "function",
+              "signature": "fn handle_session_start(sym: &Symposium, payload: &SessionStartInput) -> OutputEvent",
+              "docs": "Handle SessionStart: orient the agent toward crate-aware tooling and, when due, nudge the\nuser to update. The two fragments are computed independently -- the discovery hint is never gated\nbehind the update-check throttle -- then joined into a single context block.",
+              "visibility": "private"
+            },
+            {
+              "name": "handle_user_prompt_submit",
+              "kind": "function",
+              "signature": "fn handle_user_prompt_submit(_sym: &Symposium, _prompt_payload: &UserPromptSubmitInput) -> OutputEvent",
+              "docs": "Handle UserPromptSubmit: no-op for now.",
+              "visibility": "private"
+            },
+            {
+              "name": "merge",
+              "kind": "function",
+              "signature": "fn merge(a: &mut Value, b: Value)",
+              "docs": "Recursively merge two JSON objects, with `b` taking precedence over `a`.\nFields with null values in `b` will delete the corresponding field in `a`.\nFields not present in `b` will be left unchanged in `a`.",
+              "visibility": "public"
+            },
+            {
+              "name": "run",
+              "kind": "function",
+              "signature": "fn run(sym: &Symposium, agent: HookAgent, event: HookEvent) -> ExitCode",
+              "docs": "CLI entry point: read payload from stdin, dispatch, print output.",
+              "visibility": "public"
+            },
+            {
+              "name": "run_auto_sync",
+              "kind": "function",
+              "signature": "fn run_auto_sync(sym: &Symposium, input: &InputEvent, fallback_cwd: &Path)",
+              "docs": "Run sync if we're in a workspace directory and auto-sync is enabled. Non-fatal.\n\nUses per-workspace state to skip sync when `Cargo.lock` hasn't changed\nsince the last successful sync, avoiding expensive `cargo metadata` calls\non every hook invocation.",
+              "visibility": "private"
+            },
+            {
+              "name": "spawn_from_spec",
+              "kind": "function",
+              "signature": "fn spawn_from_spec(spec: SpawnSpec) -> Result<Child>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "update_nudge",
+              "kind": "function",
+              "signature": "fn update_nudge(sym: &Symposium) -> Option<String>",
+              "docs": "Nudge the user to update. Gated by `auto-update = \\\"warn\\\"`, the 25h throttle,\nand a newer published version on the registry; `None` otherwise.",
+              "visibility": "private"
+            },
+            {
+              "name": "write_hook_trace",
+              "kind": "function",
+              "signature": "fn write_hook_trace(agent: HookAgent, event: HookEvent, input: &str, output: &[u8])",
+              "docs": "If `SYMPOSIUM_HOOK_TRACE` is set to a file path, append a JSONL entry.\nUsed for integration testing to check what hooks occur when we invoke the agent.",
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "hook::tests",
@@ -152,7 +979,65 @@
             "hook_schema::opencode",
             "hook_schema::symposium"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Agent",
+              "kind": "trait",
+              "signature": "trait Agent",
+              "docs": "Represents an agent that can handle hook events.",
+              "visibility": "public"
+            },
+            {
+              "name": "AgentHookEvent",
+              "kind": "trait",
+              "signature": "trait AgentHookEvent",
+              "docs": "Represents the \"handler\" for a specific kind of hook event\n(e.g., a `PreToolUse` event coming from `claude`),\ncapable of parsing the native payloads and outputs\nas well as converting from symposium types.",
+              "visibility": "public"
+            },
+            {
+              "name": "AgentHookInput",
+              "kind": "trait",
+              "signature": "trait AgentHookInput",
+              "docs": "Represents the data sent *from* an agent *to* a hook.",
+              "visibility": "public"
+            },
+            {
+              "name": "AgentHookOutput",
+              "kind": "trait",
+              "signature": "trait AgentHookOutput",
+              "docs": "Represents the data sent *from* a hook *to* an agent.",
+              "visibility": "public"
+            },
+            {
+              "name": "ErasedAgentHookEvent",
+              "kind": "trait",
+              "signature": "trait ErasedAgentHookEvent",
+              "docs": "Erased version of [`AgentHookEvent`]. Represents the \"handler\" for a\nspecific kind of hook event (e.g., a `PreToolUse` event coming from `claude`),\ncapable of parsing the native payloads and outputs as well as\nconverting from symposium types.",
+              "visibility": "public"
+            },
+            {
+              "name": "ErasedAgentHookEventImpl",
+              "kind": "struct",
+              "signature": "struct ErasedAgentHookEventImpl",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "HookAgent",
+              "kind": "enum",
+              "signature": "enum HookAgent",
+              "docs": "Agents supported by Symposium hooks.",
+              "visibility": "public"
+            },
+            {
+              "name": "erase_agent_hook_event",
+              "kind": "function",
+              "signature": "fn erase_agent_hook_event(e: E) -> Box<dyn ErasedAgentHookEvent>",
+              "docs": "Helper to erase a concrete `AgentHookEvent` into a trait object.",
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "hook_schema::claude",
@@ -160,7 +1045,142 @@
           "submodules": [
             "hook_schema::claude::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "ClaudeCode",
+              "kind": "struct",
+              "signature": "struct ClaudeCode",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudePostToolUseEvent",
+              "kind": "struct",
+              "signature": "struct ClaudePostToolUseEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudePostToolUseHookOutput",
+              "kind": "struct",
+              "signature": "struct ClaudePostToolUseHookOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudePostToolUseInput",
+              "kind": "struct",
+              "signature": "struct ClaudePostToolUseInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudePostToolUseOutput",
+              "kind": "struct",
+              "signature": "struct ClaudePostToolUseOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudePreToolUseEvent",
+              "kind": "struct",
+              "signature": "struct ClaudePreToolUseEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudePreToolUseHookOutput",
+              "kind": "struct",
+              "signature": "struct ClaudePreToolUseHookOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudePreToolUseInput",
+              "kind": "struct",
+              "signature": "struct ClaudePreToolUseInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudePreToolUseOutput",
+              "kind": "struct",
+              "signature": "struct ClaudePreToolUseOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudeSessionStartEvent",
+              "kind": "struct",
+              "signature": "struct ClaudeSessionStartEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudeSessionStartHookOutput",
+              "kind": "struct",
+              "signature": "struct ClaudeSessionStartHookOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudeSessionStartInput",
+              "kind": "struct",
+              "signature": "struct ClaudeSessionStartInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudeSessionStartOutput",
+              "kind": "struct",
+              "signature": "struct ClaudeSessionStartOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudeUserPromptSubmitEvent",
+              "kind": "struct",
+              "signature": "struct ClaudeUserPromptSubmitEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudeUserPromptSubmitHookOutput",
+              "kind": "struct",
+              "signature": "struct ClaudeUserPromptSubmitHookOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudeUserPromptSubmitInput",
+              "kind": "struct",
+              "signature": "struct ClaudeUserPromptSubmitInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "ClaudeUserPromptSubmitOutput",
+              "kind": "struct",
+              "signature": "struct ClaudeUserPromptSubmitOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "claude_event",
+              "kind": "macro",
+              "signature": "macro_rules! claude_event",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "claude_hook_output_from_symposium",
+              "kind": "function",
+              "signature": "fn claude_hook_output_from_symposium(event_name: &str, event: &OutputEvent) -> Option<Value>",
+              "docs": null,
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "hook_schema::claude::tests",
@@ -172,37 +1192,518 @@
           "path": "hook_schema::codex",
           "file": "src/hook_schema/codex.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Codex",
+              "kind": "struct",
+              "signature": "struct Codex",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexHookSpecificOutput",
+              "kind": "struct",
+              "signature": "struct CodexHookSpecificOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexPostToolUseEvent",
+              "kind": "struct",
+              "signature": "struct CodexPostToolUseEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexPostToolUseInput",
+              "kind": "struct",
+              "signature": "struct CodexPostToolUseInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexPostToolUseOutput",
+              "kind": "struct",
+              "signature": "struct CodexPostToolUseOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexPreToolUseEvent",
+              "kind": "struct",
+              "signature": "struct CodexPreToolUseEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexPreToolUseInput",
+              "kind": "struct",
+              "signature": "struct CodexPreToolUseInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexPreToolUseOutput",
+              "kind": "struct",
+              "signature": "struct CodexPreToolUseOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexSessionStartEvent",
+              "kind": "struct",
+              "signature": "struct CodexSessionStartEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexSessionStartInput",
+              "kind": "struct",
+              "signature": "struct CodexSessionStartInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexSessionStartOutput",
+              "kind": "struct",
+              "signature": "struct CodexSessionStartOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexUserPromptSubmitEvent",
+              "kind": "struct",
+              "signature": "struct CodexUserPromptSubmitEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexUserPromptSubmitInput",
+              "kind": "struct",
+              "signature": "struct CodexUserPromptSubmitInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CodexUserPromptSubmitOutput",
+              "kind": "struct",
+              "signature": "struct CodexUserPromptSubmitOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "codex_event",
+              "kind": "macro",
+              "signature": "macro_rules! codex_event",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "codex_hook_output_from_symposium",
+              "kind": "function",
+              "signature": "fn codex_hook_output_from_symposium(event_name: &str, event: &OutputEvent) -> Option<Value>",
+              "docs": null,
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "hook_schema::copilot",
           "file": "src/hook_schema/copilot.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Copilot",
+              "kind": "struct",
+              "signature": "struct Copilot",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotPostToolUseEvent",
+              "kind": "struct",
+              "signature": "struct CopilotPostToolUseEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotPostToolUseInput",
+              "kind": "struct",
+              "signature": "struct CopilotPostToolUseInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotPostToolUseOutput",
+              "kind": "struct",
+              "signature": "struct CopilotPostToolUseOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotPreToolUseEvent",
+              "kind": "struct",
+              "signature": "struct CopilotPreToolUseEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotPreToolUseInput",
+              "kind": "struct",
+              "signature": "struct CopilotPreToolUseInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotPreToolUseOutput",
+              "kind": "struct",
+              "signature": "struct CopilotPreToolUseOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotSessionStartEvent",
+              "kind": "struct",
+              "signature": "struct CopilotSessionStartEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotSessionStartInput",
+              "kind": "struct",
+              "signature": "struct CopilotSessionStartInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotSessionStartOutput",
+              "kind": "struct",
+              "signature": "struct CopilotSessionStartOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotUserPromptSubmitEvent",
+              "kind": "struct",
+              "signature": "struct CopilotUserPromptSubmitEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotUserPromptSubmitInput",
+              "kind": "struct",
+              "signature": "struct CopilotUserPromptSubmitInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "CopilotUserPromptSubmitOutput",
+              "kind": "struct",
+              "signature": "struct CopilotUserPromptSubmitOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "copilot_event",
+              "kind": "macro",
+              "signature": "macro_rules! copilot_event",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "copilot_output_impl",
+              "kind": "macro",
+              "signature": "macro_rules! copilot_output_impl",
+              "docs": null,
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "hook_schema::gemini",
           "file": "src/hook_schema/gemini.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Gemini",
+              "kind": "struct",
+              "signature": "struct Gemini",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiPostToolUseEvent",
+              "kind": "struct",
+              "signature": "struct GeminiPostToolUseEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiPostToolUseHookOutput",
+              "kind": "struct",
+              "signature": "struct GeminiPostToolUseHookOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiPostToolUseInput",
+              "kind": "struct",
+              "signature": "struct GeminiPostToolUseInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiPostToolUseOutput",
+              "kind": "struct",
+              "signature": "struct GeminiPostToolUseOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiPreToolUseEvent",
+              "kind": "struct",
+              "signature": "struct GeminiPreToolUseEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiPreToolUseHookOutput",
+              "kind": "struct",
+              "signature": "struct GeminiPreToolUseHookOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiPreToolUseInput",
+              "kind": "struct",
+              "signature": "struct GeminiPreToolUseInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiPreToolUseOutput",
+              "kind": "struct",
+              "signature": "struct GeminiPreToolUseOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiSessionStartEvent",
+              "kind": "struct",
+              "signature": "struct GeminiSessionStartEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiSessionStartHookOutput",
+              "kind": "struct",
+              "signature": "struct GeminiSessionStartHookOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiSessionStartInput",
+              "kind": "struct",
+              "signature": "struct GeminiSessionStartInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiSessionStartOutput",
+              "kind": "struct",
+              "signature": "struct GeminiSessionStartOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiUserPromptSubmitEvent",
+              "kind": "struct",
+              "signature": "struct GeminiUserPromptSubmitEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiUserPromptSubmitHookOutput",
+              "kind": "struct",
+              "signature": "struct GeminiUserPromptSubmitHookOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiUserPromptSubmitInput",
+              "kind": "struct",
+              "signature": "struct GeminiUserPromptSubmitInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "GeminiUserPromptSubmitOutput",
+              "kind": "struct",
+              "signature": "struct GeminiUserPromptSubmitOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "gemini_event",
+              "kind": "macro",
+              "signature": "macro_rules! gemini_event",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "gemini_hook_output_from_symposium",
+              "kind": "function",
+              "signature": "fn gemini_hook_output_from_symposium(event_name: &str, event: &OutputEvent) -> Option<Value>",
+              "docs": null,
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "hook_schema::goose",
           "file": "src/hook_schema/goose.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Goose",
+              "kind": "struct",
+              "signature": "struct Goose",
+              "docs": null,
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "hook_schema::kiro",
           "file": "src/hook_schema/kiro.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Kiro",
+              "kind": "struct",
+              "signature": "struct Kiro",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroPostToolUseEvent",
+              "kind": "struct",
+              "signature": "struct KiroPostToolUseEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroPostToolUseInput",
+              "kind": "struct",
+              "signature": "struct KiroPostToolUseInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroPostToolUseOutput",
+              "kind": "struct",
+              "signature": "struct KiroPostToolUseOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroPreToolUseEvent",
+              "kind": "struct",
+              "signature": "struct KiroPreToolUseEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroPreToolUseInput",
+              "kind": "struct",
+              "signature": "struct KiroPreToolUseInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroPreToolUseOutput",
+              "kind": "struct",
+              "signature": "struct KiroPreToolUseOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroSessionStartEvent",
+              "kind": "struct",
+              "signature": "struct KiroSessionStartEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroSessionStartInput",
+              "kind": "struct",
+              "signature": "struct KiroSessionStartInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroSessionStartOutput",
+              "kind": "struct",
+              "signature": "struct KiroSessionStartOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroUserPromptSubmitEvent",
+              "kind": "struct",
+              "signature": "struct KiroUserPromptSubmitEvent",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroUserPromptSubmitInput",
+              "kind": "struct",
+              "signature": "struct KiroUserPromptSubmitInput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "KiroUserPromptSubmitOutput",
+              "kind": "struct",
+              "signature": "struct KiroUserPromptSubmitOutput",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "kiro_event",
+              "kind": "macro",
+              "signature": "macro_rules! kiro_event",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "kiro_output_impl",
+              "kind": "macro",
+              "signature": "macro_rules! kiro_output_impl",
+              "docs": null,
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "hook_schema::opencode",
           "file": "src/hook_schema/opencode.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "OpenCode",
+              "kind": "struct",
+              "signature": "struct OpenCode",
+              "docs": null,
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "hook_schema::symposium",
@@ -222,19 +1723,116 @@
           "path": "init",
           "file": "src/init.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "InitOpts",
+              "kind": "struct",
+              "signature": "struct InitOpts",
+              "docs": "Options that can be provided on the command line to skip interactive prompts.",
+              "visibility": "public"
+            },
+            {
+              "name": "find_workspace_root",
+              "kind": "function",
+              "signature": "fn find_workspace_root(sym: &Symposium, cwd: &Path) -> Result<PathBuf>",
+              "docs": "Find the workspace root using `cargo metadata`, run from the given directory.",
+              "visibility": "public"
+            },
+            {
+              "name": "init",
+              "kind": "function",
+              "signature": "fn init(sym: &mut Symposium, out: &Output, opts: &InitOpts) -> Result<()>",
+              "docs": "Run user-wide initialization.\n\nPrompts for agents (unless provided), writes\n`~/.symposium/config.toml`, and registers global hooks.",
+              "visibility": "public"
+            },
+            {
+              "name": "interactive",
+              "kind": "function",
+              "signature": "fn interactive(out: &Output) -> bool",
+              "docs": "Whether we can prompt the user interactively.",
+              "visibility": "private"
+            },
+            {
+              "name": "prompt_for_agents",
+              "kind": "function",
+              "signature": "fn prompt_for_agents(existing: &[AgentEntry]) -> Result<Vec<Agent>>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "prompt_for_auto_update",
+              "kind": "function",
+              "signature": "fn prompt_for_auto_update(current: AutoUpdate) -> Result<AutoUpdate>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "prompt_for_hook_scope",
+              "kind": "function",
+              "signature": "fn prompt_for_hook_scope(current: HookScope) -> Result<HookScope>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "resolve_agents",
+              "kind": "function",
+              "signature": "fn resolve_agents(opts: &InitOpts, existing: &[AgentEntry], should_prompt: bool) -> Result<Vec<Agent>>",
+              "docs": "Resolve which agents to configure. Priority:\n1. Explicit `--add-agent` / `--remove-agent` flags (applied to existing set)\n2. Interactive multi-select (if `should_prompt`), pre-selecting existing agents\n3. Default to first agent (Claude) in non-interactive mode",
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "installation",
           "file": "src/installation.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "install_requirement",
+              "kind": "function",
+              "signature": "fn install_requirement(sym: &Symposium, install: &Installation) -> Result<()>",
+              "docs": "Acquire an installation as a requirement: run its kind-specific source\nstep (if any), then any declared `install_commands`. Does NOT resolve to\na runnable — requirements are only ever \"ensure on disk\".",
+              "visibility": "public"
+            },
+            {
+              "name": "resolve_runnable",
+              "kind": "function",
+              "signature": "fn resolve_runnable(sym: &Symposium, installation: &Installation, override_executable: Option<&str>, override_script: Option<&str>, label: &str) -> Result<Runnable>",
+              "docs": "Acquire an installation's source (if any), run its `install_commands`, and\npick a `Runnable` from (`installation.executable`/`script`) with the\ncaller's overrides used when the installation leaves them unset.\n\n`label` is the caller's identifier for error messages (e.g. `\"hook `foo`\"`\nor `\"subcommand `bar`\"`). Used purely for diagnostics; does not affect\nresolution.\n\nValidation (in `plugins.rs`) guarantees that across the installation and\nthe caller-side overrides, at most one of `executable`/`script` is set,\nso this function does not re-check that invariant.",
+              "visibility": "public"
+            },
+            {
+              "name": "run_install_commands",
+              "kind": "function",
+              "signature": "fn run_install_commands(commands: &[String]) -> Result<()>",
+              "docs": "Run a list of post-install shell commands sequentially. Stops at the first\nfailure.",
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "output",
           "file": "src/output.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Output",
+              "kind": "struct",
+              "signature": "struct Output",
+              "docs": "Controls whether user-facing status messages are printed.",
+              "visibility": "public"
+            },
+            {
+              "name": "display_path",
+              "kind": "function",
+              "signature": "fn display_path(path: &Path) -> String",
+              "docs": "Replace the home directory prefix with `~` for display.",
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "plugins",
@@ -242,7 +1840,387 @@
           "submodules": [
             "plugins::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Audience",
+              "kind": "enum",
+              "signature": "enum Audience",
+              "docs": "Whether a subcommand is intended for human or agent use.\n\nControls grouping in `cargo agents --help`; does not gate dispatch.",
+              "visibility": "public"
+            },
+            {
+              "name": "CRATE_DEFAULT_SKILLS_PATH",
+              "kind": "const",
+              "signature": "const CRATE_DEFAULT_SKILLS_PATH: &str",
+              "docs": "Default subdirectory used when no `[package.metadata.symposium]` is present.",
+              "visibility": "public"
+            },
+            {
+              "name": "DirectoryType",
+              "kind": "enum",
+              "signature": "enum DirectoryType",
+              "docs": "What type of directory this is (plugin or skill).",
+              "visibility": "private"
+            },
+            {
+              "name": "Hook",
+              "kind": "struct",
+              "signature": "struct Hook",
+              "docs": "A validated hook definition.\n\n`command` is the name of an `Installation` in the plugin (possibly a\nsynthetic one promoted from an inline declaration). `executable` / `script`\n/ `args` may further specify the invocation when not pinned by the\ninstallation.",
+              "visibility": "public"
+            },
+            {
+              "name": "HookFormat",
+              "kind": "enum",
+              "signature": "enum HookFormat",
+              "docs": "The wire format a plugin hook expects for input/output.\n\nThis is distinct from `HookAgent` because:\n- `Symposium` is a wire format but not an agent (no CLI invokes hooks\n  in symposium format natively).\n- Not all agents have hook wire formats (e.g., Goose uses MCP extensions,\n  OpenCode uses JS plugins), so only agents with shell-hook JSON formats\n  appear here.",
+              "visibility": "public"
+            },
+            {
+              "name": "Installation",
+              "kind": "struct",
+              "signature": "struct Installation",
+              "docs": "A `[[installations]]` entry in the validated `Plugin`.\n\nInline references on hooks and on other installations are promoted to\nsynthetic entries here, so this is the single source of truth: every\n`Hook.command` and `Hook.requirements` / `Installation.requirements`\nnames a member of `Plugin.installations`.\n\nInstallations may be runnable (have `executable` or `script`), pure setup\n(only `install_commands`), pure aggregators (only `requirements`), or any\ncombination. Whether an installation is *expected* to resolve to a runnable\nis decided at the hook layer.",
+              "visibility": "public"
+            },
+            {
+              "name": "LoadWarning",
+              "kind": "struct",
+              "signature": "struct LoadWarning",
+              "docs": "A non-fatal plugin source load failure.",
+              "visibility": "public"
+            },
+            {
+              "name": "MAX_SUBCOMMAND_DESCRIPTION_LEN",
+              "kind": "const",
+              "signature": "const MAX_SUBCOMMAND_DESCRIPTION_LEN: usize",
+              "docs": "Maximum length (bytes) of a subcommand's `description` field.",
+              "visibility": "private"
+            },
+            {
+              "name": "McpServerEntry",
+              "kind": "type_alias",
+              "signature": "type McpServerEntry = McpServer",
+              "docs": "An MCP server entry in a plugin manifest.",
+              "visibility": "public"
+            },
+            {
+              "name": "ParsedPlugin",
+              "kind": "struct",
+              "signature": "struct ParsedPlugin",
+              "docs": "A parsed plugin with its path and manifest.",
+              "visibility": "public"
+            },
+            {
+              "name": "Plugin",
+              "kind": "struct",
+              "signature": "struct Plugin",
+              "docs": "A loaded, *validated* plugin manifest.\n\nThis is a table of contents — it describes what skills and hooks are\navailable, but does not load skill content. The skills layer handles\ndiscovery and loading.",
+              "visibility": "public"
+            },
+            {
+              "name": "PluginInfo",
+              "kind": "struct",
+              "signature": "struct PluginInfo",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "PluginMcpServer",
+              "kind": "struct",
+              "signature": "struct PluginMcpServer",
+              "docs": "An MCP server entry with optional crate filtering.\n\nWhen `crates` is present, the server is only registered if the workspace\nmatches those predicates (ANDed with plugin-level `crates`).",
+              "visibility": "public"
+            },
+            {
+              "name": "PluginRegistry",
+              "kind": "struct",
+              "signature": "struct PluginRegistry",
+              "docs": "Loaded plugin registry: plugins from TOML manifests and standalone skills\ndiscovered directly in plugin source directories.",
+              "visibility": "public"
+            },
+            {
+              "name": "PluginSource",
+              "kind": "enum",
+              "signature": "enum PluginSource",
+              "docs": "Source declaration for a skill group.\n\nAccepts one of:\n- `source.path = \"...\"` — local path\n- `source.git = \"...\"` — GitHub URL\n- `source = \"crate\"` — skills live in crate source trees (layout controlled\n  by `[package.metadata.symposium]` in each crate's Cargo.toml)\n\n`source = \"crate\"` is the only valid crate form. The former\n`source.crate = { ... }` and `source.crate_path = \"...\"` are parse errors\nwith a migration hint.",
+              "visibility": "public"
+            },
+            {
+              "name": "ProviderInfo",
+              "kind": "struct",
+              "signature": "struct ProviderInfo",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "RESERVED_SUBCOMMAND_NAMES",
+              "kind": "const",
+              "signature": "const RESERVED_SUBCOMMAND_NAMES: &[&str]",
+              "docs": "Names a plugin subcommand cannot use because they collide with built-in\n`cargo agents` commands.",
+              "visibility": "private"
+            },
+            {
+              "name": "RawHook",
+              "kind": "struct",
+              "signature": "struct RawHook",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "RawInlineInstallation",
+              "kind": "struct",
+              "signature": "struct RawInlineInstallation",
+              "docs": "Inline installation table. Carries the same fields as a\n`[[installations]]` entry minus `name`.",
+              "visibility": "private"
+            },
+            {
+              "name": "RawInstallationRef",
+              "kind": "enum",
+              "signature": "enum RawInstallationRef",
+              "docs": "Raw command reference as it appears in TOML: a string (named installation\nreference) or an inline installation table.\n\nInline forms are promoted at validation time into synthetic\n`[[installations]]` entries, so the validated `Plugin` only ever stores\ninstallation references as plain names.",
+              "visibility": "private"
+            },
+            {
+              "name": "RawNamedInstallation",
+              "kind": "struct",
+              "signature": "struct RawNamedInstallation",
+              "docs": "`[[installations]]` entry: a name plus the same fields as a `RawInlineInstallation`.",
+              "visibility": "private"
+            },
+            {
+              "name": "RawPluginManifest",
+              "kind": "struct",
+              "signature": "struct RawPluginManifest",
+              "docs": "Raw TOML manifest deserialized from a plugin `.toml` file.",
+              "visibility": "private"
+            },
+            {
+              "name": "RawSubcommand",
+              "kind": "struct",
+              "signature": "struct RawSubcommand",
+              "docs": "Raw `[subcommand.<name>]` entry. The TOML table-key is the subcommand\nname; this struct carries the table body.",
+              "visibility": "private"
+            },
+            {
+              "name": "SkillGroup",
+              "kind": "struct",
+              "signature": "struct SkillGroup",
+              "docs": "A `[[skills]]` entry from a plugin manifest.\n\nEach group declares which crates it advises on (`crates`) and\noptionally a remote source for the skill files.",
+              "visibility": "public"
+            },
+            {
+              "name": "SourceDirContents",
+              "kind": "struct",
+              "signature": "struct SourceDirContents",
+              "docs": "Raw scan results from a plugin source directory.",
+              "visibility": "private"
+            },
+            {
+              "name": "StandaloneSkill",
+              "kind": "struct",
+              "signature": "struct StandaloneSkill",
+              "docs": "A standalone skill in the registry, paired with the origin it should be\nattributed to (derived from the source name + the skill's path within\nthat source, so two registries can each contribute a same-named\nstandalone skill without colliding).",
+              "visibility": "public"
+            },
+            {
+              "name": "Subcommand",
+              "kind": "struct",
+              "signature": "struct Subcommand",
+              "docs": "A validated `[subcommand.<name>]` entry.\n\n`command` is the name of an `Installation` in the plugin (possibly a\nsynthetic one promoted from an inline declaration), matching the same\nresolution pattern as `Hook.command`.",
+              "visibility": "public"
+            },
+            {
+              "name": "ValidationKind",
+              "kind": "enum",
+              "signature": "enum ValidationKind",
+              "docs": "The kind of item that was validated.",
+              "visibility": "public"
+            },
+            {
+              "name": "ValidationResult",
+              "kind": "struct",
+              "signature": "struct ValidationResult",
+              "docs": "Result of validating a single item in a plugin source directory.",
+              "visibility": "public"
+            },
+            {
+              "name": "check_crate_exists",
+              "kind": "function",
+              "signature": "fn check_crate_exists(crate_name: &str) -> bool",
+              "docs": "Check whether a crate name exists on crates.io.",
+              "visibility": "public"
+            },
+            {
+              "name": "collect_crate_names_in_source_dir",
+              "kind": "function",
+              "signature": "fn collect_crate_names_in_source_dir(dir: &Path) -> Result<Vec<String>>",
+              "docs": "Collect all crate names referenced in predicates across a plugin source directory.\n\nScans TOML plugin manifests (skill group `crates`) and\nstandalone SKILL.md files, returning deduplicated crate names.\nItems that fail to load are silently skipped.",
+              "visibility": "public"
+            },
+            {
+              "name": "discover_directory_type",
+              "kind": "function",
+              "signature": "fn discover_directory_type(dir: &Path) -> Result<Option<DirectoryType>>",
+              "docs": "Determine if a directory contains a plugin or skill.\nReturns None if it contains neither.\nSYMPOSIUM.toml takes precedence over SKILL.md.",
+              "visibility": "private"
+            },
+            {
+              "name": "discover_in_directory",
+              "kind": "function",
+              "signature": "fn discover_in_directory(dir: &Path, source_name: &str, source_dir: &Path, plugins: &mut Vec<Result<ParsedPlugin>>, skill_files: &mut Vec<PathBuf>) -> Result<()>",
+              "docs": "Recursively discover plugins and skills with precedence and pruning.\n\n`source_name` and `source_dir` describe the registry source root —\npassed through unchanged on recursion and stamped onto each\ndiscovered `ParsedPlugin`.",
+              "visibility": "private"
+            },
+            {
+              "name": "ensure_plugin_sources",
+              "kind": "function",
+              "signature": "fn ensure_plugin_sources(sym: &Symposium, update: UpdateLevel)",
+              "docs": "Fetch/update git-based plugin sources.\n\nEnsure git-based plugin sources are up to date.\n\n`update` controls freshness checking behavior (see `UpdateLevel`).\nOnly refreshes sources with `auto-update = true` (unless `update` is `Fetch`).\nPath-based sources are skipped (no fetching needed).",
+              "visibility": "public"
+            },
+            {
+              "name": "fetch_plugin_source",
+              "kind": "function",
+              "signature": "fn fetch_plugin_source(sym: &Symposium, git_url: &str, update: UpdateLevel) -> Result<PathBuf>",
+              "docs": "Fetch a plugin source repository, returning the cached directory path.",
+              "visibility": "private"
+            },
+            {
+              "name": "find_plugin",
+              "kind": "function",
+              "signature": "fn find_plugin(sym: &Symposium, name: &str) -> Option<ParsedPlugin>",
+              "docs": "Find a plugin by name across all sources.",
+              "visibility": "public"
+            },
+            {
+              "name": "list_plugins",
+              "kind": "function",
+              "signature": "fn list_plugins(sym: &Symposium) -> Vec<ProviderInfo>",
+              "docs": "List all providers and their plugins.",
+              "visibility": "public"
+            },
+            {
+              "name": "load_all_plugins",
+              "kind": "function",
+              "signature": "fn load_all_plugins(sym: &Symposium) -> Vec<ParsedPlugin>",
+              "docs": "Load all plugins from all configured plugin source directories,\ndiscarding load errors with warnings.\n\nUse `load_registry()` instead if you also need standalone skills.",
+              "visibility": "public"
+            },
+            {
+              "name": "load_plugin",
+              "kind": "function",
+              "signature": "fn load_plugin(manifest_path: &Path, source_name: &str, source_dir: &Path) -> Result<ParsedPlugin>",
+              "docs": "Load and validate a single plugin from a TOML manifest.\n\n`source_name` and `source_dir` describe the plugin source the\nmanifest was found through (used for `SkillOrigin::Source`\nattribution at sync time). Standalone callers — like the\n`plugin validate` CLI — that don't need origin attribution can pass\nan empty string and the manifest's parent directory.",
+              "visibility": "public"
+            },
+            {
+              "name": "load_registry",
+              "kind": "function",
+              "signature": "fn load_registry(sym: &Symposium) -> PluginRegistry",
+              "docs": "Scan all configured plugin source directories and load the registry.\n\nDiscovers TOML plugin manifests and standalone skill directories,\nthen loads both into a `PluginRegistry`.",
+              "visibility": "public"
+            },
+            {
+              "name": "resolve_one_source",
+              "kind": "function",
+              "signature": "fn resolve_one_source(source: &PluginSourceConfig, base_dir: &Path, cache_base: &Path) -> Option<PathBuf>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "resolve_or_promote",
+              "kind": "function",
+              "signature": "fn resolve_or_promote(raw: RawInstallationRef, installations: &mut Vec<Installation>, names: &mut BTreeSet<String>, synth_name: &mut dyn FnMut, ctx: &str) -> Result<String>",
+              "docs": "Resolve a `RawInstallationRef`. If named, validate against the existing\ninstallations and return the name. If inline, promote the inline body to\na new synthetic `Installation` (named via `synth_name`) appended to\n`installations`, and return the synthetic name.",
+              "visibility": "private"
+            },
+            {
+              "name": "resolve_plugin_source_dir",
+              "kind": "function",
+              "signature": "fn resolve_plugin_source_dir(sym: &Symposium, resolved: &ResolvedPluginSource) -> Option<PathBuf>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "resolve_plugin_source_dirs",
+              "kind": "function",
+              "signature": "fn resolve_plugin_source_dirs(sym: &Symposium, sources: &[ResolvedPluginSource]) -> Vec<(String, PathBuf)>",
+              "docs": "Resolve the directories for all configured plugin sources, paired with\neach source's display name (used to attribute standalone skills to a\nstable origin).\n\nFor `path` sources: resolves relative to the source's `base_dir`, or uses absolute paths as-is.\nFor `git` sources: computes the cache path under `~/.symposium/cache/plugin-sources/`.\n\nDoes no network I/O — just computes paths.",
+              "visibility": "private"
+            },
+            {
+              "name": "scan_source_dir",
+              "kind": "function",
+              "signature": "fn scan_source_dir(dir: P, source_name: &str) -> Result<SourceDirContents>",
+              "docs": "Scan a plugin source directory for TOML plugin manifests and standalone skills.\n\nDiscovery rules:\n1. Plugin = directory with `SYMPOSIUM.toml` file\n2. Skill = directory with `SKILL.md` file\n3. Plugin takes precedence over skill in the same directory\n4. Once a directory is claimed as plugin/skill, don't recurse into it\n\n`source_name` is the registry source the directory was reached\nthrough; it gets stamped onto each `ParsedPlugin` so origin\nattribution can use it later. Callers that don't care about origin\nattribution (CLI validation, tests) pass `\"\"`.",
+              "visibility": "private"
+            },
+            {
+              "name": "standalone_skill_origin",
+              "kind": "function",
+              "signature": "fn standalone_skill_origin(source_name: &str, source_dir: &Path, skill_md: &Path) -> SkillOrigin",
+              "docs": "Build the `SkillOrigin` for a standalone skill discovered at\n`skill_md` inside the plugin source rooted at `source_dir`.\n\nIdentity is `(source_name, skill_path-relative-to-source-root)`,\nwhich matches the `Source` origin assigned to plugin `source.path`\ngroups. So a standalone skill at `<source>/foo/SKILL.md` and a\nplugin in the same source whose `source.path` points at `foo/`\nproduce the *same* origin — they describe the same on-disk skill.",
+              "visibility": "private"
+            },
+            {
+              "name": "sync_plugin_source",
+              "kind": "function",
+              "signature": "fn sync_plugin_source(sym: &Symposium, provider: Option<&str>) -> Result<Vec<String>>",
+              "docs": "Sync plugin sources.\n\nIf `provider` is Some, sync only that provider (ignores auto-update).\nIf `provider` is None, sync all sources with auto-update = true.",
+              "visibility": "public"
+            },
+            {
+              "name": "validate_hook",
+              "kind": "function",
+              "signature": "fn validate_hook(raw: RawHook, installations: &mut Vec<Installation>, names: &mut BTreeSet<String>) -> Result<Hook>",
+              "docs": "Validate a raw hook into a `Hook`, promoting any inline `command` /\n`requirements` into synthetic entries on `installations`.",
+              "visibility": "private"
+            },
+            {
+              "name": "validate_installation",
+              "kind": "function",
+              "signature": "fn validate_installation(install: &Installation) -> Result<()>",
+              "docs": "Validate semantic constraints on an installation that serde alone cannot\nexpress:\n- `executable` and `script` are mutually exclusive on a single layer.\n- cargo + `git` requires an explicit `executable`, since we can't query\n  crates.io to infer one.",
+              "visibility": "private"
+            },
+            {
+              "name": "validate_manifest",
+              "kind": "function",
+              "signature": "fn validate_manifest(manifest: RawPluginManifest) -> Result<Plugin>",
+              "docs": "Convert a raw manifest into a validated `Plugin`.\n\nUser-declared `[[installations]]` come first in the resulting list, in\ndeclaration order. Inline references on installations and hooks are\npromoted into synthetic entries appended to the same list so that every\nvalidated reference is a plain name.",
+              "visibility": "private"
+            },
+            {
+              "name": "validate_skill_groups",
+              "kind": "function",
+              "signature": "fn validate_skill_groups(plugin_crates: &PredicateSet, skills: &[SkillGroup]) -> Result<()>",
+              "docs": "Validate skill-group source constraints that serde alone cannot express.\n\nWhen a group uses `source = \"crate\"`, at least one non-wildcard predicate\nmust be reachable (plugin-level or group-level) so Symposium can resolve\nconcrete crates to fetch.\n\nValid:\n  crates = [\"serde\"]              + source = \"crate\"  → fetch serde\n  crates = [\"*\"], group [\"serde\"] + source = \"crate\"  → fetch serde\n  crates = [\"*\", \"serde\"]         + source = \"crate\"  → fetch serde\n\nInvalid:\n  crates = [\"*\"]                  + source = \"crate\"  → no concrete crate\n  crates = [\"*\"], group [\"*\"]     + source = \"crate\"  → no concrete crate",
+              "visibility": "private"
+            },
+            {
+              "name": "validate_source_dir",
+              "kind": "function",
+              "signature": "fn validate_source_dir(dir: &Path) -> Result<Vec<ValidationResult>>",
+              "docs": "Validate a directory as a plugin source.\n\nScans for TOML plugin manifests and standalone SKILL.md files,\nattempts to load each, and returns validation results for all items found.",
+              "visibility": "public"
+            },
+            {
+              "name": "validate_subcommand",
+              "kind": "function",
+              "signature": "fn validate_subcommand(name: String, raw: RawSubcommand, installations: &mut Vec<Installation>, names: &mut BTreeSet<String>) -> Result<Subcommand>",
+              "docs": "Validate a raw subcommand into a `Subcommand`, promoting any inline\n`command` into a synthetic installation entry.",
+              "visibility": "private"
+            },
+            {
+              "name": "validate_subcommand_name",
+              "kind": "function",
+              "signature": "fn validate_subcommand_name(name: &str) -> Result<()>",
+              "docs": "Validate the user-typed name of a `[subcommand.<name>]` table.",
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "plugins::tests",
@@ -256,7 +2234,51 @@
           "submodules": [
             "predicate::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "Parser",
+              "kind": "struct",
+              "signature": "struct Parser",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "Predicate",
+              "kind": "enum",
+              "signature": "enum Predicate",
+              "docs": "A predicate matching a single crate dependency, optionally constrained by version.\n\nThe wildcard `*` always matches — even a workspace with zero dependencies.",
+              "visibility": "public"
+            },
+            {
+              "name": "PredicateSet",
+              "kind": "struct",
+              "signature": "struct PredicateSet",
+              "docs": "A set of predicates where at least one must match (OR semantics).",
+              "visibility": "public"
+            },
+            {
+              "name": "parse",
+              "kind": "function",
+              "signature": "fn parse(input: &str) -> Result<Predicate>",
+              "docs": "Parse a single predicate string.",
+              "visibility": "public"
+            },
+            {
+              "name": "parse_comma_separated",
+              "kind": "function",
+              "signature": "fn parse_comma_separated(input: &str) -> Result<Vec<Predicate>>",
+              "docs": "Parse a comma-separated predicate string into multiple predicates.\n\nUsed for SKILL.md frontmatter where `crates: serde, tokio>=1.0` is a single line.",
+              "visibility": "public"
+            },
+            {
+              "name": "union_matched_crates",
+              "kind": "function",
+              "signature": "fn union_matched_crates(predicate_sets: &[&PredicateSet], workspace: &[(String, Version)]) -> Vec<(String, Version)>",
+              "docs": "Union matched crates from multiple predicate sets.\n\nReturns the deduplicated set of concrete crates matched by any level.",
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "predicate::tests",
@@ -270,7 +2292,72 @@
           "submodules": [
             "self_update::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "CRATE_NAME",
+              "kind": "const",
+              "signature": "const CRATE_NAME: &str",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "cargo_install",
+              "kind": "function",
+              "signature": "fn cargo_install(sym: &Symposium) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "check_upgrade",
+              "kind": "function",
+              "signature": "fn check_upgrade(sym: &Symposium) -> Result<Option<Version>>",
+              "docs": "Check whether a newer version is available.  Returns `Some(latest)`\nif an upgrade is available, `None` if we're current or ahead.",
+              "visibility": "public"
+            },
+            {
+              "name": "latest_version",
+              "kind": "function",
+              "signature": "fn latest_version(sym: &Symposium) -> Result<Version>",
+              "docs": "Query the registry for the latest published version of symposium\nby running `cargo search symposium --limit 1`.",
+              "visibility": "public"
+            },
+            {
+              "name": "maybe_check_for_update",
+              "kind": "function",
+              "signature": "fn maybe_check_for_update(sym: &Symposium, out: &Output) -> bool",
+              "docs": "Full update check for the binary startup path.\n\nRespects config and the 24-hour throttle.  For `warn`, prints a\nnudge.  For `on`, installs the update via `cargo install`, then\nreturns `true` so the caller can re-exec into the new binary.",
+              "visibility": "public"
+            },
+            {
+              "name": "maybe_warn_for_update",
+              "kind": "function",
+              "signature": "fn maybe_warn_for_update(sym: &Symposium, out: &Output)",
+              "docs": "Warn-only update check for the library path (`cli::run`).\n\nRespects config and the 24-hour throttle.  Prints a nudge when\n`auto-update = \"warn\"` and a newer version exists.  Does nothing for\n`off` or `on` — the binary handles `on` (which needs re-exec).",
+              "visibility": "public"
+            },
+            {
+              "name": "parse_cargo_search_output",
+              "kind": "function",
+              "signature": "fn parse_cargo_search_output(output: &str) -> Result<Version>",
+              "docs": "Parse the version from `cargo search` output.\n\nExpected format: `symposium = \"0.3.0\"    # AI the Rust Way`",
+              "visibility": "private"
+            },
+            {
+              "name": "re_exec",
+              "kind": "function",
+              "signature": "fn re_exec() -> never",
+              "docs": "Re-execute the current process (replaces the process via exec on Unix,\nspawn-and-exit on Windows).",
+              "visibility": "public"
+            },
+            {
+              "name": "self_update",
+              "kind": "function",
+              "signature": "fn self_update(sym: &Symposium, out: &Output) -> Result<()>",
+              "docs": "Run the self-update: check for a newer version and install it.",
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "self_update::tests",
@@ -284,7 +2371,156 @@
           "submodules": [
             "skills::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "MAX_REDIRECT_DEPTH",
+              "kind": "const",
+              "signature": "const MAX_REDIRECT_DEPTH: usize",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "RawFrontmatter",
+              "kind": "struct",
+              "signature": "struct RawFrontmatter",
+              "docs": "Raw frontmatter fields extracted from a SKILL.md file.\n`crates` is comma-separated on a single line.",
+              "visibility": "private"
+            },
+            {
+              "name": "Skill",
+              "kind": "struct",
+              "signature": "struct Skill",
+              "docs": "A parsed skill from a SKILL.md file.",
+              "visibility": "public"
+            },
+            {
+              "name": "SkillOrigin",
+              "kind": "enum",
+              "signature": "enum SkillOrigin",
+              "docs": "Where a skill came from.\n\nTwo skills with equal `SkillOrigin` and equal name install to the same\ndirectory and dedupe; everything else installs independently. This lets\ntwo plugins that legitimately both supply a same-named skill from\ndifferent sources coexist, while collapsing the case where two plugins\njust happen to point at the same logical bundle.\n\nWhat matters for identity is *where the skill bytes live*, not which\nplugin manifest pointed at them. Two plugins in the same registry\nsource that both reference the same on-disk skill therefore dedupe.\n\n- `Crate { name, version }` — the skill came from walking the source tree\n  of a specific crate version (`source = \"crate\"`).\n  Identity is `(name, version)` only: two plugins targeting the same\n  crate version produce the same logical skills regardless of which\n  plugin pointed at them.\n- `Git { source, commit_sha, skill_path }` — the skill came from a\n  `source.git` group. Identity is `(source, commit_sha, skill_path)`:\n  `source` is the parsed [`GitSource`](symposium_install::git::GitSource)\n  which normalizes equivalent URLs to the same value, the commit SHA\n  is the resolved hash that was actually fetched, and `skill_path` is\n  the SKILL.md's path within the repo tree. Two URLs that refer to\n  the same repository normalize to the same `GitSource` and therefore\n  deduplicate. Different SKILL.md files within one repo stay distinct.\n- `Source { source_name, skill_path }` — the skill came from a\n  plugin's `source.path` group, or from a standalone `SKILL.md` in\n  a registry source. `source_name` is the registry source's\n  display name (e.g. `\"user-plugins\"`); `skill_path` is the\n  SKILL.md's parent directory relative to the source root, with\n  forward slashes. Two plugins in the same source pointing at the\n  same on-disk skill bundle therefore produce the same origin.",
+              "visibility": "public"
+            },
+            {
+              "name": "SkillWithGroupContext",
+              "kind": "struct",
+              "signature": "struct SkillWithGroupContext",
+              "docs": "A skill paired with all predicate sets from its lineage and the origin\nit was discovered through.\n\nEach predicate set must match (AND across sets). Within a set,\nany predicate matching suffices (OR within a set). An empty\n`predicate_sets` vec means \"always matches\".",
+              "visibility": "public"
+            },
+            {
+              "name": "collect_skill_applicable_to",
+              "kind": "function",
+              "signature": "fn collect_skill_applicable_to(skill: &Skill, origin: SkillOrigin, plugin_crates: &PredicateSet, group_crates: &PredicateSet, for_crates: &[(String, Version)], results: &mut Vec<SkillWithGroupContext>)",
+              "docs": "Filter a single skill by crate constraints, pushing it onto `results`\nif it matches with its origin attached.",
+              "visibility": "private"
+            },
+            {
+              "name": "discover_skills",
+              "kind": "function",
+              "signature": "fn discover_skills(skills_dir: &Path, group: &SkillGroup) -> Vec<Result<Skill>>",
+              "docs": "Discover all skills found in a given directory.\n\nRecursively searches for `SKILL.md` files, then prunes nested candidates\n(if `A/SKILL.md` exists, `A/B/SKILL.md` is excluded — skills don't nest).",
+              "visibility": "private"
+            },
+            {
+              "name": "fetch_and_resolve_skills",
+              "kind": "function",
+              "signature": "fn fetch_and_resolve_skills(crate_name: &str, version_spec: Option<&str>, workspace_crates: &[WorkspaceCrate], group: &SkillGroup, visited: &mut HashSet<String>, skills: &mut Vec<(Skill, SkillOrigin)>, depth: usize)",
+              "docs": "Recursively fetch a crate and resolve its skills via metadata.",
+              "visibility": "private"
+            },
+            {
+              "name": "fetch_git_skill_source",
+              "kind": "function",
+              "signature": "fn fetch_git_skill_source(sym: &Symposium, git_url: &str) -> Option<(PathBuf, GitSource, String)>",
+              "docs": "Fetch a `source.git` group's tarball and look up the resolved commit\nSHA from the cache meta. Returns `(cache_dir, parsed_source, commit_sha)`\nor `None` (with a warning) on failure.",
+              "visibility": "private"
+            },
+            {
+              "name": "find_skill_files_recursive",
+              "kind": "function",
+              "signature": "fn find_skill_files_recursive(dir: &Path, out: &mut Vec<PathBuf>)",
+              "docs": "Recursively walk a directory collecting paths to `SKILL.md` files.",
+              "visibility": "private"
+            },
+            {
+              "name": "load_crate_skills",
+              "kind": "function",
+              "signature": "fn load_crate_skills(plugin_crates: &PredicateSet, group_crates: &PredicateSet, group: &SkillGroup, workspace_crates: &[WorkspaceCrate], for_crates: &[(String, Version)]) -> Vec<(Skill, SkillOrigin)>",
+              "docs": "Resolve crate source predicates, fetch each matched crate, read its\n`[package.metadata.symposium]`, and discover skills. Follows redirects\nrecursively with cycle detection.",
+              "visibility": "private"
+            },
+            {
+              "name": "load_git_skills",
+              "kind": "function",
+              "signature": "fn load_git_skills(sym: &Symposium, group: &SkillGroup, url: &str) -> Vec<(Skill, SkillOrigin)>",
+              "docs": "Fetch a `source.git` group's tree and build a per-skill `Git` origin\nkeyed on `(owner/repo, commit_sha, skill_path-within-repo)` so two\nplugins that loaded the same SKILL.md at the same commit collapse —\neven if their `source.git` URLs differed.",
+              "visibility": "private"
+            },
+            {
+              "name": "load_path_skills",
+              "kind": "function",
+              "signature": "fn load_path_skills(dir: &Path, group: &SkillGroup, parsed: &ParsedPlugin) -> Vec<(Skill, SkillOrigin)>",
+              "docs": "Discover skills under a local `source.path` directory and stamp each\nwith a `Source` origin keyed on `(source_name, skill-path-relative-to-source-root)`.\nTwo plugins in the same source pointing at the same on-disk skill\ntherefore produce the same origin.",
+              "visibility": "private"
+            },
+            {
+              "name": "load_skill",
+              "kind": "function",
+              "signature": "fn load_skill(skill_md_path: &Path, group: &SkillGroup) -> Result<Skill>",
+              "docs": "Load a single skill from a SKILL.md file.\n\nA skill should have `crates` at either the skill level or\nthe group level (or both). If neither provides it, a warning is logged\nbut loading succeeds (the skill simply won't match any crate query).",
+              "visibility": "private"
+            },
+            {
+              "name": "load_skills_for_group",
+              "kind": "function",
+              "signature": "fn load_skills_for_group(sym: &Symposium, parsed: &ParsedPlugin, group: &SkillGroup, workspace_crates: &[WorkspaceCrate], for_crates: &[(String, Version)]) -> (PredicateSet, Vec<(Skill, SkillOrigin)>)",
+              "docs": "Discover and load skills for a group, applying pre-fetch filtering.\n\nChecks group-level `crates` predicates against `for_crates` before\nfetching git sources, to avoid unnecessary downloads. Each returned\nskill is paired with the `SkillOrigin` it was discovered through:\n\n- `CratePath` → `SkillOrigin::Crate { name, version }`, one per\n  matched crate (canonical name/version from the fetch result).\n- `Git` → `SkillOrigin::Git { source, commit_sha, skill_path }`, one\n  per discovered SKILL.md (path varies per skill within the group).\n- `Path` → `SkillOrigin::Source { source_name, skill_path }`, with\n  `skill_path` computed per discovered SKILL.md relative to the\n  plugin source root. Two plugins in the same source pointing at\n  the same on-disk skill therefore produce the same origin.",
+              "visibility": "private"
+            },
+            {
+              "name": "load_standalone_skill",
+              "kind": "function",
+              "signature": "fn load_standalone_skill(skill_md_path: &Path) -> Result<Skill>",
+              "docs": "Load a standalone skill from a SKILL.md file (no plugin group context).\n\nStandalone skills must be self-contained: all metadata (crates)\ncomes from the SKILL.md frontmatter.\nReturns an error if `crates` is missing (standalone skills have\nno group to inherit from).",
+              "visibility": "public"
+            },
+            {
+              "name": "parse_frontmatter",
+              "kind": "function",
+              "signature": "fn parse_frontmatter(content: &str) -> Result<RawFrontmatter>",
+              "docs": "Parse SKILL.md content: extract `---`-fenced frontmatter and body.",
+              "visibility": "private"
+            },
+            {
+              "name": "prune_nested_skills",
+              "kind": "function",
+              "signature": "fn prune_nested_skills(paths: &mut Vec<PathBuf>)",
+              "docs": "Remove nested skill candidates: if `A/SKILL.md` and `A/B/SKILL.md` both\nexist, keep only the shallower `A/SKILL.md`.",
+              "visibility": "private"
+            },
+            {
+              "name": "skill_path_relative_to",
+              "kind": "function",
+              "signature": "fn skill_path_relative_to(root: &Path, skill_md: &Path) -> String",
+              "docs": "SKILL.md's parent directory relative to a given root, normalized to\nforward slashes. Canonicalizes both ends first so that two routes\nto the same on-disk skill (e.g. `plugin-a/../shared/the-skill` vs.\nthe standalone walk's direct `shared/the-skill`) collapse to the\nsame string.\n\nFalls back to the unnormalized path on canonicalization failure\n(better than panicking) — that just degrades dedup to per-route\nwithout losing correctness.",
+              "visibility": "private"
+            },
+            {
+              "name": "skill_path_within_repo",
+              "kind": "function",
+              "signature": "fn skill_path_within_repo(cache_dir: &Path, skill_md: &Path, source_subpath: &str) -> String",
+              "docs": "Compute a SKILL.md's path relative to the *repository root*, using\nthe cache directory (which holds the subtree the user pointed at via\n`tree/<ref>/<subpath>`) and the source's intra-repo subpath.\n\nReturned with forward-slash separators so the value is stable across\nplatforms — it's part of the `SkillOrigin::Git` identity.",
+              "visibility": "private"
+            },
+            {
+              "name": "skills_applicable_to",
+              "kind": "function",
+              "signature": "fn skills_applicable_to(sym: &Symposium, registry: &PluginRegistry, workspace_crates: &[WorkspaceCrate]) -> Vec<SkillWithGroupContext>",
+              "docs": "Resolve all applicable skills from the registry.\n\nResolve all skills applicable to the given crates.\n\n`for_crates` is the set of crate name/version pairs to match against.\nFor `crate --list`, this is the full workspace deps.\nFor `crate <name>`, this is a single-element slice with the resolved crate.",
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "skills::tests",
@@ -298,7 +2534,86 @@
           "submodules": [
             "state::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "CURRENT_VERSION",
+              "kind": "const",
+              "signature": "const CURRENT_VERSION: &str",
+              "docs": "Runtime version of this binary, baked in at compile time.",
+              "visibility": "public"
+            },
+            {
+              "name": "STATE_FILE",
+              "kind": "const",
+              "signature": "const STATE_FILE: &str",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "State",
+              "kind": "struct",
+              "signature": "struct State",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "UPDATE_CHECK_INTERVAL",
+              "kind": "const",
+              "signature": "const UPDATE_CHECK_INTERVAL: Duration",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "ensure_current",
+              "kind": "function",
+              "signature": "fn ensure_current(config_dir: &Path) -> Option<String>",
+              "docs": "Ensure `state.toml` exists and reflects the running binary version.\n\nReturns the previously recorded version (if any) so callers can\ndecide whether a migration is needed.",
+              "visibility": "public"
+            },
+            {
+              "name": "load",
+              "kind": "function",
+              "signature": "fn load(config_dir: &Path) -> Option<State>",
+              "docs": "Load `state.toml` from `config_dir`, returning `None` if absent or unparseable.",
+              "visibility": "public"
+            },
+            {
+              "name": "record_update_check",
+              "kind": "function",
+              "signature": "fn record_update_check(config_dir: &Path)",
+              "docs": "Record that an update check just happened.",
+              "visibility": "public"
+            },
+            {
+              "name": "save",
+              "kind": "function",
+              "signature": "fn save(config_dir: &Path, state: &State)",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "should_check_for_update",
+              "kind": "function",
+              "signature": "fn should_check_for_update(config_dir: &Path) -> bool",
+              "docs": "Whether enough time has elapsed since the last update check.",
+              "visibility": "public"
+            },
+            {
+              "name": "stamp",
+              "kind": "function",
+              "signature": "fn stamp(config_dir: &Path)",
+              "docs": "Write `state.toml` into `config_dir` with the current binary version,\npreserving other fields.",
+              "visibility": "public"
+            },
+            {
+              "name": "state_path",
+              "kind": "function",
+              "signature": "fn state_path(config_dir: &Path) -> PathBuf",
+              "docs": null,
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "state::tests",
@@ -312,7 +2627,51 @@
           "submodules": [
             "subcommand_dispatch::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "ExternalOutput",
+              "kind": "struct",
+              "signature": "struct ExternalOutput",
+              "docs": "Result of running an external subcommand.",
+              "visibility": "public"
+            },
+            {
+              "name": "applicable_subcommands",
+              "kind": "function",
+              "signature": "fn applicable_subcommands(registry: &PluginRegistry, deps: &[(String, Version)]) -> impl Iterator",
+              "docs": "Iterate every plugin subcommand whose plugin-level and subcommand-level crate predicate\napply to `deps`. Shared between dispatch (name lookup) and help rendering (audience grouping).",
+              "visibility": "public"
+            },
+            {
+              "name": "dispatch_external",
+              "kind": "function",
+              "signature": "fn dispatch_external(sym: &Symposium, cwd: &Path, argv: Vec<OsString>) -> Result<ExternalOutput>",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "exit_byte_from",
+              "kind": "function",
+              "signature": "fn exit_byte_from(status: ExitStatus) -> u8",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "find_subcommand",
+              "kind": "function",
+              "signature": "fn find_subcommand(registry: &PluginRegistry, name: &str, workspace: &[WorkspaceCrate]) -> Result<Option<(&Plugin, &Subcommand)>>",
+              "docs": "Look up a subcommand by name across all plugins, filtered by workspace crates at a plugin\n and subcommand levels.\n\n- `Ok(None)` - no plugin claims the name, or every claim was filtered out.\n- `Ok(Some(..))` - exactly one plugin claims the name and applies.\n- `Err(..)` - two or more plugins claim the name and all apply.",
+              "visibility": "public"
+            },
+            {
+              "name": "spawn",
+              "kind": "function",
+              "signature": "fn spawn(runnable: Runnable, install_args: &[String], forwarded: &[OsString]) -> Result<ExternalOutput>",
+              "docs": null,
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "subcommand_dispatch::tests",
@@ -324,7 +2683,79 @@
           "path": "sync",
           "file": "src/sync.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "MARKER_FILE",
+              "kind": "const",
+              "signature": "const MARKER_FILE: &str",
+              "docs": "Marker file written into every skill directory symposium installs.\n\nCleanup walks each agent's skills parent dir and removes any subdir\ncontaining this marker that isn't in the freshly-installed set, leaving\nuser-managed skill directories (which lack the marker) untouched.",
+              "visibility": "private"
+            },
+            {
+              "name": "copy_dir_recursive",
+              "kind": "function",
+              "signature": "fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<()>",
+              "docs": "Recursively copy the contents of `src` into `dst`. Creates `dst` if\nmissing. Regular files are copied with `fs::copy`; subdirectories are\nwalked. Symlinks and other special files are ignored.",
+              "visibility": "private"
+            },
+            {
+              "name": "create_managed_dir_all",
+              "kind": "function",
+              "signature": "fn create_managed_dir_all(path: &Path, boundary: &Path) -> Result<()>",
+              "docs": "Create `path` (and any missing ancestors up to `boundary`), writing a\n`.gitignore` file containing `*` into each directory we newly create.\n\n`boundary` is the workspace root — we never walk above it, and we do not\nwrite a `.gitignore` there (it already exists and isn't ours to manage).\nIf `path` or an ancestor already exists, no `.gitignore` is added — we\nonly annotate directories we actually create.",
+              "visibility": "private"
+            },
+            {
+              "name": "discover_user_authored_skills",
+              "kind": "function",
+              "signature": "fn discover_user_authored_skills(project_root: &Path) -> Vec<PathBuf>",
+              "docs": "Discover user-authored skills in `<project_root>/.agents/skills/`.\n\nA skill is user-authored iff its directory contains `SKILL.md` and does\n*not* contain the `.symposium` marker. Symposium never writes markers\ninto source skills, so this unambiguously separates user content from\ncopies symposium put there itself.",
+              "visibility": "private"
+            },
+            {
+              "name": "has_symposium_marker",
+              "kind": "function",
+              "signature": "fn has_symposium_marker(dir: &Path) -> bool",
+              "docs": "Does `dir` contain the `.symposium` marker, i.e. is it a symposium-managed\nskill directory? Returns `false` for user-authored skills and for any\ndirectory symposium did not create.",
+              "visibility": "private"
+            },
+            {
+              "name": "mark_generated_skill_directory",
+              "kind": "function",
+              "signature": "fn mark_generated_skill_directory(dir: &Path) -> Result<()>",
+              "docs": "Mark a directory as symposium-generated: drop the `.symposium` marker\nand a `.gitignore` containing `*` so the directory is recognized on\nfuture syncs and kept out of version control.\n\nIdempotent — overwrites any pre-existing marker or `.gitignore` in\n`dir`. Callers use this both for freshly-installed plugin skills and\nfor skills propagated by the agents-syncing feature.",
+              "visibility": "private"
+            },
+            {
+              "name": "propagate_user_skill",
+              "kind": "function",
+              "signature": "fn propagate_user_skill(source_dir: &Path, dest_dir: &Path, project_root: &Path, out: &Output) -> Result<bool>",
+              "docs": "Propagate a user-authored skill from `.agents/skills/<name>/` to\n`dest_dir`, returning `Ok(true)` if propagation happened (so the caller\nshould record `dest_dir` as installed).\n\nLeaves `dest_dir` alone if it exists and lacks the `.symposium` marker —\nthe user put something there by hand and we must not clobber it.",
+              "visibility": "private"
+            },
+            {
+              "name": "register_hooks",
+              "kind": "function",
+              "signature": "fn register_hooks(sym: &Symposium, out: &Output) -> Result<()>",
+              "docs": "Register global hooks for all configured agents.\nRegister hooks for all configured agents. Uses `home_dir` (global scope).\nCalled from `init` after writing the user config.",
+              "visibility": "public"
+            },
+            {
+              "name": "skills_parent_dir",
+              "kind": "function",
+              "signature": "fn skills_parent_dir(agent: Agent, project_root: &Path) -> PathBuf",
+              "docs": "Skills parent directory for an agent (e.g. `.claude/skills/` or\n`.agents/skills/`), derived from `Agent::project_skill_dir`.",
+              "visibility": "private"
+            },
+            {
+              "name": "sync",
+              "kind": "function",
+              "signature": "fn sync(sym: &Symposium, cwd: &Path, out: &Output) -> Result<()>",
+              "docs": "Run the full sync: discover applicable skills, install into agent dirs,\nclean up stale installations.",
+              "visibility": "public"
+            }
+          ]
         },
         {
           "path": "test_utils",
@@ -338,7 +2769,51 @@
           "submodules": [
             "workspace_state::tests"
           ],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "WorkspaceState",
+              "kind": "struct",
+              "signature": "struct WorkspaceState",
+              "docs": null,
+              "visibility": "public"
+            },
+            {
+              "name": "file_mtime",
+              "kind": "function",
+              "signature": "fn file_mtime(path: &Path) -> Option<u64>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "find_workspace_root",
+              "kind": "function",
+              "signature": "fn find_workspace_root(sym: &Symposium, cwd: &Path) -> Option<PathBuf>",
+              "docs": "Find the workspace root via `cargo locate-project --workspace`.\nFast (~10-50ms) and follows cargo's actual workspace discovery logic.",
+              "visibility": "public"
+            },
+            {
+              "name": "mtime_matches",
+              "kind": "function",
+              "signature": "fn mtime_matches(cached: Option<u64>, path: &Path) -> bool",
+              "docs": "Check whether the cached mtime matches the current file state.\nA missing file matches a `None` cached mtime (both absent = fresh).\nA missing file with a `Some` cached mtime means the file was deleted = stale.",
+              "visibility": "private"
+            },
+            {
+              "name": "state_file_path",
+              "kind": "function",
+              "signature": "fn state_file_path(sym: &Symposium, workspace_root: &Path) -> PathBuf",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "workspace_dir_name",
+              "kind": "function",
+              "signature": "fn workspace_dir_name(workspace_root: &Path) -> String",
+              "docs": null,
+              "visibility": "private"
+            }
+          ]
         },
         {
           "path": "workspace_state::tests",
@@ -352,18 +2827,374 @@
       "name": "symposium-hook",
       "depends_on": [],
       "description": null,
+      "items": [
+        {
+          "name": "Decision",
+          "kind": "enum",
+          "signature": "enum Decision",
+          "docs": "Output for a `PreToolUse` event.\nDecision for a `PreToolUse` hook.",
+          "visibility": "public"
+        },
+        {
+          "name": "HookEvent",
+          "kind": "enum",
+          "signature": "enum HookEvent",
+          "docs": "Hook event types supported by Symposium.",
+          "visibility": "public"
+        },
+        {
+          "name": "HookHandler",
+          "kind": "trait",
+          "signature": "trait HookHandler",
+          "docs": "Trait for implementing a symposium hook handler.\n\nOverride the methods for the events you care about. The defaults return\nthe default (empty) output for each event type.",
+          "visibility": "public"
+        },
+        {
+          "name": "Input",
+          "kind": "enum",
+          "signature": "enum Input",
+          "docs": "Input event received on stdin.",
+          "visibility": "public"
+        },
+        {
+          "name": "Output",
+          "kind": "enum",
+          "signature": "enum Output",
+          "docs": "Output event written to stdout.",
+          "visibility": "public"
+        },
+        {
+          "name": "PostToolUseInput",
+          "kind": "struct",
+          "signature": "struct PostToolUseInput",
+          "docs": "Input for a `PostToolUse` event.",
+          "visibility": "public"
+        },
+        {
+          "name": "PostToolUseOutput",
+          "kind": "struct",
+          "signature": "struct PostToolUseOutput",
+          "docs": "Output for a `PostToolUse` event.",
+          "visibility": "public"
+        },
+        {
+          "name": "PreToolUseInput",
+          "kind": "struct",
+          "signature": "struct PreToolUseInput",
+          "docs": "Input for a `PreToolUse` event.",
+          "visibility": "public"
+        },
+        {
+          "name": "PreToolUseOutput",
+          "kind": "struct",
+          "signature": "struct PreToolUseOutput",
+          "docs": null,
+          "visibility": "public"
+        },
+        {
+          "name": "SessionStartInput",
+          "kind": "struct",
+          "signature": "struct SessionStartInput",
+          "docs": "Input for a `SessionStart` event.",
+          "visibility": "public"
+        },
+        {
+          "name": "SessionStartOutput",
+          "kind": "struct",
+          "signature": "struct SessionStartOutput",
+          "docs": "Output for a `SessionStart` event.",
+          "visibility": "public"
+        },
+        {
+          "name": "UserPromptSubmitInput",
+          "kind": "struct",
+          "signature": "struct UserPromptSubmitInput",
+          "docs": "Input for a `UserPromptSubmit` event.",
+          "visibility": "public"
+        },
+        {
+          "name": "UserPromptSubmitOutput",
+          "kind": "struct",
+          "signature": "struct UserPromptSubmitOutput",
+          "docs": "Output for a `UserPromptSubmit` event.",
+          "visibility": "public"
+        },
+        {
+          "name": "default_handle_event",
+          "kind": "function",
+          "signature": "fn default_handle_event(handler: &impl HookHandler + Sized, input: &Input) -> Result<Output>",
+          "docs": "Default dispatch logic: matches on the event variant and calls the\ncorresponding method on the handler, wrapping the result in the appropriate\n`Output` variant.",
+          "visibility": "public"
+        },
+        {
+          "name": "is_empty_output",
+          "kind": "function",
+          "signature": "fn is_empty_output(output: &Output) -> bool",
+          "docs": null,
+          "visibility": "private"
+        },
+        {
+          "name": "run",
+          "kind": "function",
+          "signature": "fn run(handler: impl HookHandler) -> ExitCode",
+          "docs": "Run a hook handler. Reads the input event from stdin, dispatches to the\nhandler, and writes the output to stdout with the correct exit code.\n\n- Empty output (all fields `None`) → exit 0, no stdout.\n- Non-empty output → exit 0, JSON on stdout.\n- `Err(...)` → exit 1, error message on stderr.",
+          "visibility": "public"
+        },
+        {
+          "name": "run_async",
+          "kind": "function",
+          "signature": "fn run_async(handler: impl HookHandler) -> ExitCode",
+          "docs": null,
+          "visibility": "private"
+        }
+      ],
       "modules": []
     },
     {
       "name": "symposium-install",
       "depends_on": [],
       "description": null,
+      "items": [
+        {
+          "name": "AcquiredKind",
+          "kind": "enum",
+          "signature": "enum AcquiredKind",
+          "docs": "How an [`AcquiredSource`] was obtained.",
+          "visibility": "public"
+        },
+        {
+          "name": "AcquiredSource",
+          "kind": "struct",
+          "signature": "struct AcquiredSource",
+          "docs": "Acquired source — where files ended up on disk, plus the kind so\n`executable` / `script` can be resolved correctly relative to it.",
+          "visibility": "public"
+        },
+        {
+          "name": "CargoSource",
+          "kind": "struct",
+          "signature": "struct CargoSource",
+          "docs": "A binary obtained by `cargo install` (with optional binstall fast-path).",
+          "visibility": "public"
+        },
+        {
+          "name": "CratesIoCrate",
+          "kind": "struct",
+          "signature": "struct CratesIoCrate",
+          "docs": null,
+          "visibility": "private"
+        },
+        {
+          "name": "CratesIoCrateResponse",
+          "kind": "struct",
+          "signature": "struct CratesIoCrateResponse",
+          "docs": "Response from crates.io crate endpoint (for getting latest version)",
+          "visibility": "private"
+        },
+        {
+          "name": "CratesIoVersion",
+          "kind": "struct",
+          "signature": "struct CratesIoVersion",
+          "docs": null,
+          "visibility": "private"
+        },
+        {
+          "name": "CratesIoVersionResponse",
+          "kind": "struct",
+          "signature": "struct CratesIoVersionResponse",
+          "docs": "Response from crates.io version endpoint",
+          "visibility": "private"
+        },
+        {
+          "name": "GithubSource",
+          "kind": "struct",
+          "signature": "struct GithubSource",
+          "docs": "A directory of files acquired from a GitHub repository (or subtree).\nThe file to run inside the cloned tree is picked by `executable` /\n`script` on the installation or hook.",
+          "visibility": "public"
+        },
+        {
+          "name": "InstallContext",
+          "kind": "struct",
+          "signature": "struct InstallContext",
+          "docs": "Minimal context needed for acquisition.\n\nReplaces the full `Symposium` config struct — hook handlers construct this\ndirectly from environment or hardcoded paths.",
+          "visibility": "public"
+        },
+        {
+          "name": "Runnable",
+          "kind": "enum",
+          "signature": "enum Runnable",
+          "docs": "What an installation resolves to once acquired.",
+          "visibility": "public"
+        },
+        {
+          "name": "Source",
+          "kind": "enum",
+          "signature": "enum Source",
+          "docs": "How to acquire bits onto disk.\n\n`Source` describes acquisition only: cargo install, github clone. The\n\"what to run\" lives separately on the installation as `executable` or\n`script` (which resolve relative to the acquired source). An installation\ncan omit `Source` entirely — in that case `executable` / `script` are\ntaken as paths on disk and `install_commands` does any setup.",
+          "visibility": "public"
+        },
+        {
+          "name": "UpdateLevel",
+          "kind": "enum",
+          "signature": "enum UpdateLevel",
+          "docs": "Controls how aggressively cached sources are updated.",
+          "visibility": "public"
+        },
+        {
+          "name": "acquire_cargo",
+          "kind": "function",
+          "signature": "fn acquire_cargo(ctx: &InstallContext, cargo: &CargoSource, executable_hint: Option<&str>) -> Result<(PathBuf, Option<String>)>",
+          "docs": "Acquire a cargo installation: install if missing, return the cache dir\nplus the resolved binary name (when discoverable from crates.io).",
+          "visibility": "private"
+        },
+        {
+          "name": "acquire_github",
+          "kind": "function",
+          "signature": "fn acquire_github(ctx: &InstallContext, git: &GithubSource) -> Result<PathBuf>",
+          "docs": "Acquire a github source: returns the cache directory containing the repo\n(or its requested subtree).",
+          "visibility": "private"
+        },
+        {
+          "name": "acquire_source",
+          "kind": "function",
+          "signature": "fn acquire_source(ctx: &InstallContext, source: &Source, executable_hint: Option<&str>) -> Result<AcquiredSource>",
+          "docs": "Acquire a source, downloading / installing as needed. The returned\n`AcquiredSource` is used to resolve `executable` / `script` paths.\n\n`executable_hint` is only used for cargo (to pick which binary to install\nfor multi-binary crates, or as the binary name when using a git source).",
+          "visibility": "public"
+        },
+        {
+          "name": "get_binary_cache_dir",
+          "kind": "function",
+          "signature": "fn get_binary_cache_dir(ctx: &InstallContext, krate: &str, version: &str) -> Result<PathBuf>",
+          "docs": null,
+          "visibility": "private"
+        },
+        {
+          "name": "git_cache_version",
+          "kind": "function",
+          "signature": "fn git_cache_version(git_url: &str, version: Option<&str>) -> String",
+          "docs": "Cache key for a git-sourced cargo install. The user-supplied `version` (or\nthe literal `\"git\"` if absent) folds in with the URL so re-installs are\ntriggered when either changes.",
+          "visibility": "private"
+        },
+        {
+          "name": "install_cargo_crate",
+          "kind": "function",
+          "signature": "fn install_cargo_crate(ctx: &InstallContext, crate_name: &str, version: &str, binary_name: Option<String>, cache_dir: PathBuf, git: Option<String>) -> Result<()>",
+          "docs": "Install a crate using cargo binstall (fast) or cargo install (fallback).",
+          "visibility": "private"
+        },
+        {
+          "name": "install_cargo_crate_sync",
+          "kind": "function",
+          "signature": "fn install_cargo_crate_sync(ctx: &InstallContext, crate_name: &str, version: &str, binary_name: Option<String>, cache_dir: &Path, git: Option<String>) -> Result<()>",
+          "docs": null,
+          "visibility": "private"
+        },
+        {
+          "name": "make_executable",
+          "kind": "function",
+          "signature": "fn make_executable(path: &Path) -> Result<()>",
+          "docs": "Ensure a path is executable on Unix. No-op on other platforms.",
+          "visibility": "public"
+        },
+        {
+          "name": "platform_binary_exe",
+          "kind": "function",
+          "signature": "fn platform_binary_exe(binary_name: &str) -> String",
+          "docs": null,
+          "visibility": "private"
+        },
+        {
+          "name": "query_crate_binaries",
+          "kind": "function",
+          "signature": "fn query_crate_binaries(crate_name: &str, version: Option<&str>) -> Result<(String, Vec<String>)>",
+          "docs": "Query crates.io for binary names of a crate",
+          "visibility": "private"
+        }
+      ],
       "modules": [
         {
           "path": "git",
           "file": "symposium-install/src/git.rs",
           "submodules": [],
-          "description": null
+          "description": null,
+          "items": [
+            {
+              "name": "CACHE_META_FILENAME",
+              "kind": "const",
+              "signature": "const CACHE_META_FILENAME: &str",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "DEBOUNCE_DURATION",
+              "kind": "const",
+              "signature": "const DEBOUNCE_DURATION: Duration",
+              "docs": "Minimum interval between freshness checks for cached sources.",
+              "visibility": "private"
+            },
+            {
+              "name": "GitCacheManager",
+              "kind": "struct",
+              "signature": "struct GitCacheManager",
+              "docs": "Manages downloading and caching of git-sourced plugin artifacts.",
+              "visibility": "public"
+            },
+            {
+              "name": "GitHubClient",
+              "kind": "struct",
+              "signature": "struct GitHubClient",
+              "docs": "Client for GitHub REST API operations.",
+              "visibility": "private"
+            },
+            {
+              "name": "GitSource",
+              "kind": "enum",
+              "signature": "enum GitSource",
+              "docs": "A parsed git source URL.\n\nDifferent URL forms that refer to the same logical repository (e.g.,\n`https://github.com/foo/bar` and `git@github.com:foo/bar.git`) parse\nto the same variant with the same fields, enabling deduplication.",
+              "visibility": "public"
+            },
+            {
+              "name": "PluginCacheMeta",
+              "kind": "struct",
+              "signature": "struct PluginCacheMeta",
+              "docs": "Metadata stored alongside cached plugin artifacts.",
+              "visibility": "public"
+            },
+            {
+              "name": "copy_dir_recursive",
+              "kind": "function",
+              "signature": "fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<()>",
+              "docs": null,
+              "visibility": "private"
+            },
+            {
+              "name": "extract_tarball",
+              "kind": "function",
+              "signature": "fn extract_tarball(tarball_bytes: &[u8], dest: &Path) -> Result<()>",
+              "docs": "Extract a gzip tarball, flattening the single top-level directory.",
+              "visibility": "private"
+            },
+            {
+              "name": "flatten_single_dir",
+              "kind": "function",
+              "signature": "fn flatten_single_dir(dir: &Path) -> Result<()>",
+              "docs": "If a directory contains exactly one subdirectory and nothing else,\nmove that subdirectory's contents up one level.",
+              "visibility": "private"
+            },
+            {
+              "name": "parse_git_url",
+              "kind": "function",
+              "signature": "fn parse_git_url(url: &str) -> Result<GitSource>",
+              "docs": "Parse a git URL into a structured [`GitSource`].\n\nCurrently recognizes GitHub URLs:\n- `https://github.com/owner/repo`\n- `https://github.com/owner/repo/tree/branch/path/to/dir`",
+              "visibility": "public"
+            },
+            {
+              "name": "parse_github_https",
+              "kind": "function",
+              "signature": "fn parse_github_https(url: &str) -> Result<GitSource>",
+              "docs": "Parse an `https://github.com/...` URL.",
+              "visibility": "private"
+            }
+          ]
         }
       ]
     },
@@ -373,6 +3204,141 @@
         "symposium"
       ],
       "description": null,
+      "items": [
+        {
+          "name": "AgentSession",
+          "kind": "enum",
+          "signature": "enum AgentSession",
+          "docs": "A live agent session for the duration of a test.",
+          "visibility": "public"
+        },
+        {
+          "name": "FixtureScanResult",
+          "kind": "struct",
+          "signature": "struct FixtureScanResult",
+          "docs": "Directories discovered while copying fixture files.",
+          "visibility": "private"
+        },
+        {
+          "name": "HookStep",
+          "kind": "enum",
+          "signature": "enum HookStep",
+          "docs": "A single step in a hook scenario. Used by simulation mode to drive\n`execute_hook`; ignored in agent mode (the real agent produces its own hooks).",
+          "visibility": "public"
+        },
+        {
+          "name": "HookTrace",
+          "kind": "struct",
+          "signature": "struct HookTrace",
+          "docs": "One hook invocation's input and output, in canonical form.",
+          "visibility": "public"
+        },
+        {
+          "name": "SubmitResult",
+          "kind": "struct",
+          "signature": "struct SubmitResult",
+          "docs": "Collected results from a `submit` call.",
+          "visibility": "public"
+        },
+        {
+          "name": "TestAgent",
+          "kind": "enum",
+          "signature": "enum TestAgent",
+          "docs": "Which agent backend to use for integration tests.",
+          "visibility": "public"
+        },
+        {
+          "name": "TestContext",
+          "kind": "struct",
+          "signature": "struct TestContext",
+          "docs": "Test context wrapping an isolated `Symposium` instance.",
+          "visibility": "public"
+        },
+        {
+          "name": "TestMode",
+          "kind": "enum",
+          "signature": "enum TestMode",
+          "docs": "Which modes a test should run in.",
+          "visibility": "public"
+        },
+        {
+          "name": "configured_test_agents",
+          "kind": "function",
+          "signature": "fn configured_test_agents() -> Vec<TestAgent>",
+          "docs": "Read the list of test agents from `test-agents.toml` at the repo root,\nfiltered by `SYMPOSIUM_TEST_AGENT` env var if set.",
+          "visibility": "private"
+        },
+        {
+          "name": "copy_dir_recursive",
+          "kind": "function",
+          "signature": "fn copy_dir_recursive(src: &Path, dst: &Path, scan: &mut FixtureScanResult, vars: &[(&str, &str)])",
+          "docs": "Recursively copy a directory tree, expanding variables in text files.",
+          "visibility": "private"
+        },
+        {
+          "name": "expand_vars",
+          "kind": "function",
+          "signature": "fn expand_vars(content: &str, vars: &[(&str, &str)]) -> String",
+          "docs": "Expand variables in file content.",
+          "visibility": "private"
+        },
+        {
+          "name": "infer_agent_name",
+          "kind": "function",
+          "signature": "fn infer_agent_name(registry_name: &str) -> &str",
+          "docs": "Infer the symposium agent name from a registry name.",
+          "visibility": "private"
+        },
+        {
+          "name": "is_agent_mode",
+          "kind": "function",
+          "signature": "fn is_agent_mode() -> bool",
+          "docs": "Returns `true` when running in agent mode (i.e. `SYMPOSIUM_TEST_AGENT` is set).",
+          "visibility": "public"
+        },
+        {
+          "name": "is_text_file",
+          "kind": "function",
+          "signature": "fn is_text_file(path: &Path) -> bool",
+          "docs": "File extensions that get variable expansion.",
+          "visibility": "private"
+        },
+        {
+          "name": "parse_agent_name",
+          "kind": "function",
+          "signature": "fn parse_agent_name(name: &str) -> Option<TestAgent>",
+          "docs": "Parse an agent name string into a TestAgent.",
+          "visibility": "private"
+        },
+        {
+          "name": "run_with_acp_session",
+          "kind": "function",
+          "signature": "fn run_with_acp_session(agent: impl ConnectTo, ctx: TestContext, f: &impl AsyncFn) -> Result<()>",
+          "docs": "Establish an ACP connection, create a session, and run the callback inside it.",
+          "visibility": "private"
+        },
+        {
+          "name": "setup_fixture",
+          "kind": "function",
+          "signature": "fn setup_fixture(fixtures: &[&str]) -> TestContext",
+          "docs": "Create a test context by overlaying fixture fragments into a tempdir.\n\nText files (`.toml`, `.md`, `.json`, `.txt`, `.ts`, `.js`) have variables expanded:\n- `$TEST_DIR` — the tempdir root\n- `$BINARY` — path to the `cargo-agents` binary (from `CARGO_BIN_EXE_cargo-agents`)",
+          "visibility": "private"
+        },
+        {
+          "name": "test_agent",
+          "kind": "function",
+          "signature": "fn test_agent() -> Option<TestAgent>",
+          "docs": "Reads `SYMPOSIUM_TEST_AGENT` and returns the agent backend, if set.",
+          "visibility": "public"
+        },
+        {
+          "name": "with_fixture",
+          "kind": "function",
+          "signature": "fn with_fixture(mode: TestMode, fixtures: &[&str], f: impl AsyncFn) -> Result<()>",
+          "docs": "Set up a test fixture and run the given closure.\n\n- `SimulationOnly`: runs once in simulation mode.\n- `AgentOnly`: runs once per configured test agent.\n- `Any`: runs once in simulation + once per configured test agent.",
+          "visibility": "public"
+        }
+      ],
       "modules": []
     }
   ]
