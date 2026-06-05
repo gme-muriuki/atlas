@@ -138,3 +138,98 @@ fn path_attr(attrs: &[Attribute]) -> Option<String> {
     }
     None
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::BTreeMap;
+
+    /// A clean temporary directory, unique to this process and `name`.
+    fn fresh_dir(name: &str) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!("rustc-atlas-{}-{name}", std::process::id()));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    /// Write `body` to `root/rel`, creating parent directories.
+    fn write(root: &Path, rel: &str, body: &str) {
+        let path = root.join(rel);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(path, body).unwrap();
+    }
+
+    fn by_path(mods: &[Module]) -> BTreeMap<&str, &Module> {
+        mods.iter().map(|m| (m.path.as_str(), m)).collect()
+    }
+
+    #[test]
+    fn walks_files_inline_path_attr_and_missing() {
+        let root = fresh_dir("walk");
+        write(
+            &root,
+            "src/lib.rs",
+            "mod alpha;\nmod beta;\nmod inl { mod gamma; }\n#[path = \"custom.rs\"]\nmod renamed;\nmod missing;\n",
+        );
+        write(&root, "src/alpha.rs", "mod alpha_child;\n"); // alpha.rs style
+        write(&root, "src/alpha/alpha_child.rs", "");
+        write(&root, "src/beta/mod.rs", ""); // foo/mod.rs style
+        write(&root, "src/inl/gamma.rs", ""); // child of an inline module
+        write(&root, "src/custom.rs", ""); // #[path] target
+
+        let mods = read_modules(&root.join("src/lib.rs"), &root);
+        let map = by_path(&mods);
+
+        let paths: Vec<&str> = map.keys().copied().collect();
+        assert_eq!(
+            paths,
+            [
+                "alpha",
+                "alpha::alpha_child",
+                "beta",
+                "inl",
+                "inl::gamma",
+                "missing",
+                "renamed",
+            ]
+        );
+
+        // Each resolution style finds the right file.
+        assert!(map["alpha"].file.ends_with("src/alpha.rs"));
+        assert!(map["beta"].file.ends_with("src/beta/mod.rs"));
+        assert!(map["renamed"].file.ends_with("src/custom.rs"));
+        assert!(map["inl::gamma"].file.ends_with("src/inl/gamma.rs"));
+
+        // An inline module shares its parent's file.
+        assert!(map["inl"].file.ends_with("src/lib.rs"));
+
+        // A declared-but-missing module is recorded with an empty file.
+        assert_eq!(map["missing"].file, "");
+        assert!(map["missing"].submodules.is_empty());
+
+        // Submodule links point at child paths.
+        assert_eq!(map["alpha"].submodules, ["alpha::alpha_child"]);
+        assert_eq!(map["inl"].submodules, ["inl::gamma"]);
+
+        // File paths are forward-slashed regardless of platform.
+        assert!(mods.iter().all(|m| !m.file.contains('\\')));
+
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn unparseable_source_is_skipped_without_panicking() {
+        let root = fresh_dir("broken");
+        write(&root, "src/lib.rs", "mod broken;\n");
+        write(&root, "src/broken.rs", "this is not valid rust @@@");
+
+        let mods = read_modules(&root.join("src/lib.rs"), &root);
+        let map = by_path(&mods);
+
+        // The module is still recorded; its unreadable body yields no children.
+        assert!(map.contains_key("broken"));
+        assert!(map["broken"].submodules.is_empty());
+
+        let _ = fs::remove_dir_all(&root);
+    }
+}

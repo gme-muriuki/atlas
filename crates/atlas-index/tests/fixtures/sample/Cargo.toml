@@ -1,0 +1,11 @@
+# A tiny standalone crate used by the indexer integration test.
+# The empty [workspace] keeps it separate from the rustc-atlas workspace.
+[package]
+name = "sample"
+version = "0.0.0"
+edition = "2021"
+
+[lib]
+path = "src/lib.rs"
+
+[workspace]
