@@ -5,12 +5,17 @@ version = 4
 [[package]]
 name = "atlas-core"
 version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "atlas-index"
 version = "0.1.0"
 dependencies = [
+ "atlas-core",
  "cargo_metadata",
+ "serde_json",
  "syn",
 ]
 
