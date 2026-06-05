@@ -1,46 +1,379 @@
 {
   "format_version": "0.1.0",
   "source": {
-    "project": "rust-lang/rust",
-    "commit": "a1b2c3d",
-    "read_with": "rustc 1.90.0 (sample data)"
+    "project": "pragmatic-rustacean/symposium",
+    "commit": "07facb61",
+    "read_with": "rustc 1.98.0-nightly (31a9463c6 2026-05-25)"
   },
   "crates": [
     {
-      "name": "rustc_span",
-      "depends_on": [],
-      "description": "Source positions and interned strings (symbols).",
-      "modules": [
-        { "path": "source_map", "file": "compiler/rustc_span/src/source_map.rs", "submodules": [], "description": null },
-        { "path": "symbol", "file": "compiler/rustc_span/src/symbol.rs", "submodules": [], "description": null }
-      ]
-    },
-    {
-      "name": "rustc_hir",
-      "depends_on": ["rustc_span"],
-      "description": "The high-level intermediate representation.",
-      "modules": [
-        { "path": "hir", "file": "compiler/rustc_hir/src/hir.rs", "submodules": [], "description": null },
-        { "path": "def", "file": "compiler/rustc_hir/src/def.rs", "submodules": [], "description": null }
-      ]
-    },
-    {
-      "name": "rustc_middle",
-      "depends_on": ["rustc_hir", "rustc_span"],
-      "description": "Central data structures shared across compiler phases.",
-      "modules": [
-        { "path": "ty", "file": "compiler/rustc_middle/src/ty/mod.rs", "submodules": ["ty::context"], "description": "The type system." },
-        { "path": "ty::context", "file": "compiler/rustc_middle/src/ty/context.rs", "submodules": [], "description": "TyCtxt and the interners." },
-        { "path": "mir", "file": "compiler/rustc_middle/src/mir/mod.rs", "submodules": [], "description": null }
-      ]
-    },
-    {
-      "name": "rustc_mir_build",
-      "depends_on": ["rustc_hir", "rustc_middle"],
+      "name": "symposium",
+      "depends_on": [
+        "symposium-hook",
+        "symposium-install"
+      ],
       "description": null,
       "modules": [
-        { "path": "build", "file": "compiler/rustc_mir_build/src/build.rs", "submodules": [], "description": null }
+        {
+          "path": "agents",
+          "file": "src/agents/mod.rs",
+          "submodules": [
+            "agents::mcp_server_registration",
+            "agents::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "agents::mcp_server_registration",
+          "file": "src/agents/mcp_server_registration.rs",
+          "submodules": [
+            "agents::mcp_server_registration::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "agents::mcp_server_registration::tests",
+          "file": "src/agents/mcp_server_registration.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "agents::tests",
+          "file": "src/agents/mod.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "cli",
+          "file": "src/cli.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "config",
+          "file": "src/config.rs",
+          "submodules": [
+            "config::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "config::tests",
+          "file": "src/config.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "crate_command",
+          "file": "src/crate_command.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "crate_metadata",
+          "file": "src/crate_metadata.rs",
+          "submodules": [
+            "crate_metadata::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "crate_metadata::tests",
+          "file": "src/crate_metadata.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "crate_sources",
+          "file": "src/crate_sources/mod.rs",
+          "submodules": [
+            "crate_sources::list",
+            "crate_sources::probe",
+            "crate_sources::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "crate_sources::list",
+          "file": "src/crate_sources/list.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "crate_sources::probe",
+          "file": "src/crate_sources/probe.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "crate_sources::tests",
+          "file": "src/crate_sources/mod.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "help_render",
+          "file": "src/help_render.rs",
+          "submodules": [
+            "help_render::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "help_render::tests",
+          "file": "src/help_render.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "hook",
+          "file": "src/hook.rs",
+          "submodules": [
+            "hook::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "hook::tests",
+          "file": "src/hook.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "hook_schema",
+          "file": "src/hook_schema.rs",
+          "submodules": [
+            "hook_schema::claude",
+            "hook_schema::codex",
+            "hook_schema::copilot",
+            "hook_schema::gemini",
+            "hook_schema::goose",
+            "hook_schema::kiro",
+            "hook_schema::opencode",
+            "hook_schema::symposium"
+          ],
+          "description": null
+        },
+        {
+          "path": "hook_schema::claude",
+          "file": "src/hook_schema/claude.rs",
+          "submodules": [
+            "hook_schema::claude::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "hook_schema::claude::tests",
+          "file": "src/hook_schema/claude.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "hook_schema::codex",
+          "file": "src/hook_schema/codex.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "hook_schema::copilot",
+          "file": "src/hook_schema/copilot.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "hook_schema::gemini",
+          "file": "src/hook_schema/gemini.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "hook_schema::goose",
+          "file": "src/hook_schema/goose.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "hook_schema::kiro",
+          "file": "src/hook_schema/kiro.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "hook_schema::opencode",
+          "file": "src/hook_schema/opencode.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "hook_schema::symposium",
+          "file": "src/hook_schema/symposium.rs",
+          "submodules": [
+            "hook_schema::symposium::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "hook_schema::symposium::tests",
+          "file": "src/hook_schema/symposium.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "init",
+          "file": "src/init.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "installation",
+          "file": "src/installation.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "output",
+          "file": "src/output.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "plugins",
+          "file": "src/plugins.rs",
+          "submodules": [
+            "plugins::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "plugins::tests",
+          "file": "src/plugins.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "predicate",
+          "file": "src/predicate.rs",
+          "submodules": [
+            "predicate::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "predicate::tests",
+          "file": "src/predicate.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "self_update",
+          "file": "src/self_update.rs",
+          "submodules": [
+            "self_update::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "self_update::tests",
+          "file": "src/self_update.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "skills",
+          "file": "src/skills.rs",
+          "submodules": [
+            "skills::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "skills::tests",
+          "file": "src/skills.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "state",
+          "file": "src/state.rs",
+          "submodules": [
+            "state::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "state::tests",
+          "file": "src/state.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "subcommand_dispatch",
+          "file": "src/subcommand_dispatch.rs",
+          "submodules": [
+            "subcommand_dispatch::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "subcommand_dispatch::tests",
+          "file": "src/subcommand_dispatch.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "sync",
+          "file": "src/sync.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "test_utils",
+          "file": "src/test_utils.rs",
+          "submodules": [],
+          "description": null
+        },
+        {
+          "path": "workspace_state",
+          "file": "src/workspace_state.rs",
+          "submodules": [
+            "workspace_state::tests"
+          ],
+          "description": null
+        },
+        {
+          "path": "workspace_state::tests",
+          "file": "src/workspace_state.rs",
+          "submodules": [],
+          "description": null
+        }
       ]
+    },
+    {
+      "name": "symposium-hook",
+      "depends_on": [],
+      "description": null,
+      "modules": []
+    },
+    {
+      "name": "symposium-install",
+      "depends_on": [],
+      "description": null,
+      "modules": [
+        {
+          "path": "git",
+          "file": "symposium-install/src/git.rs",
+          "submodules": [],
+          "description": null
+        }
+      ]
+    },
+    {
+      "name": "symposium-testlib",
+      "depends_on": [
+        "symposium"
+      ],
+      "description": null,
+      "modules": []
     }
   ]
 }

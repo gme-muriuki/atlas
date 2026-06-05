@@ -18,4 +18,5 @@
 - [Descriptions](design/descriptions.md)
 - [Reading crates](design/reading-crates.md)
 - [Reading modules](design/reading-modules.md)
+- [Item inventory](design/item-inventory.md)
 - [Scope](design/scope.md)
