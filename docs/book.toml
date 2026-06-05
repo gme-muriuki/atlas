@@ -1,0 +1,5 @@
+[book]
+title = "rustc Atlas"
+authors = []
+language = "en"
+src = "src"
