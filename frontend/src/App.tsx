@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import type { Atlas } from './atlas.ts';
+import { CrateGraph } from './CrateGraph.tsx';
 import { loadAtlas } from './load-atlas.ts';
 import './App.css';
 
@@ -43,22 +44,17 @@ export function App() {
   const { project, commit, read_with } = atlas.source;
 
   return (
-    <main className="app">
-      <h1>rustc Atlas</h1>
-      <p className="source">
-        {project ?? 'local project'}
-        {commit ? ` @ ${commit}` : ''} — read with {read_with}
-      </p>
-      <ul className="crate-list">
-        {atlas.crates.map((crate) => (
-          <li key={crate.name}>
-            <span className="crate-name">{crate.name}</span>
-            <span className="crate-meta">
-              {crate.depends_on.length} deps · {crate.modules.length} modules
-            </span>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <div className="app-graph">
+      <header className="topbar">
+        <strong>rustc Atlas</strong>
+        <span className="source">
+          {project ?? 'local project'}
+          {commit ? ` @ ${commit}` : ''} — read with {read_with}
+        </span>
+      </header>
+      <div className="graph-area">
+        <CrateGraph crates={atlas.crates} />
+      </div>
+    </div>
   );
 }
