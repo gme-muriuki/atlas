@@ -1,0 +1,74 @@
+.panel {
+  width: 320px;
+  flex: none;
+  border-left: 1px solid var(--border);
+  overflow: auto;
+  padding: 16px;
+  box-sizing: border-box;
+  background: var(--bg);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.panel-title {
+  font-family: var(--mono);
+  font-size: 16px;
+  color: var(--text-h);
+}
+
+.panel-close {
+  border: none;
+  background: none;
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.panel-desc {
+  color: var(--text);
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+
+.panel-empty {
+  color: var(--text);
+  font-style: italic;
+}
+
+.module-tree {
+  list-style: none;
+  margin: 0;
+  padding-left: 14px;
+}
+
+.module-tree .module-tree {
+  border-left: 1px solid var(--border);
+}
+
+.module-leaf,
+.module-tree summary {
+  padding: 2px 0;
+}
+
+.module-tree summary {
+  cursor: pointer;
+}
+
+.module-name {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.module-desc {
+  color: var(--text);
+  font-size: 12px;
+  margin-left: 8px;
+}

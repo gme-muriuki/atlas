@@ -5,6 +5,7 @@ import {
   ReactFlow,
   useEdgesState,
   useNodesState,
+  type Node,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -13,9 +14,10 @@ import { layoutCrates } from './graph-layout.ts';
 
 interface CrateGraphProps {
   crates: Crate[];
+  onSelectCrate: (name: string) => void;
 }
 
-export function CrateGraph({ crates }: CrateGraphProps) {
+export function CrateGraph({ crates, onSelectCrate }: CrateGraphProps) {
   const layout = useMemo(() => layoutCrates(crates), [crates]);
   const [nodes, setNodes, onNodesChange] = useNodesState(layout.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(layout.edges);
@@ -32,6 +34,7 @@ export function CrateGraph({ crates }: CrateGraphProps) {
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
+      onNodeClick={(_event, node: Node) => onSelectCrate(node.id)}
       fitView
     >
       <Background />
