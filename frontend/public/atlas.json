@@ -1,0 +1,46 @@
+{
+  "format_version": "0.1.0",
+  "source": {
+    "project": "rust-lang/rust",
+    "commit": "a1b2c3d",
+    "read_with": "rustc 1.90.0 (sample data)"
+  },
+  "crates": [
+    {
+      "name": "rustc_span",
+      "depends_on": [],
+      "description": "Source positions and interned strings (symbols).",
+      "modules": [
+        { "path": "source_map", "file": "compiler/rustc_span/src/source_map.rs", "submodules": [], "description": null },
+        { "path": "symbol", "file": "compiler/rustc_span/src/symbol.rs", "submodules": [], "description": null }
+      ]
+    },
+    {
+      "name": "rustc_hir",
+      "depends_on": ["rustc_span"],
+      "description": "The high-level intermediate representation.",
+      "modules": [
+        { "path": "hir", "file": "compiler/rustc_hir/src/hir.rs", "submodules": [], "description": null },
+        { "path": "def", "file": "compiler/rustc_hir/src/def.rs", "submodules": [], "description": null }
+      ]
+    },
+    {
+      "name": "rustc_middle",
+      "depends_on": ["rustc_hir", "rustc_span"],
+      "description": "Central data structures shared across compiler phases.",
+      "modules": [
+        { "path": "ty", "file": "compiler/rustc_middle/src/ty/mod.rs", "submodules": ["ty::context"], "description": "The type system." },
+        { "path": "ty::context", "file": "compiler/rustc_middle/src/ty/context.rs", "submodules": [], "description": "TyCtxt and the interners." },
+        { "path": "mir", "file": "compiler/rustc_middle/src/mir/mod.rs", "submodules": [], "description": null }
+      ]
+    },
+    {
+      "name": "rustc_mir_build",
+      "depends_on": ["rustc_hir", "rustc_middle"],
+      "description": null,
+      "modules": [
+        { "path": "build", "file": "compiler/rustc_mir_build/src/build.rs", "submodules": [], "description": null }
+      ]
+    }
+  ]
+}
