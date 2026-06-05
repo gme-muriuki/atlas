@@ -7,5 +7,6 @@ their manifests, without resolving or downloading external crates. This requires
 no network access and no compiler components beyond Cargo.
 
 From the declared dependencies, the program keeps only edges where both crates
-belong to the project. Dependencies on outside libraries are discarded. The kept
-edges are recorded in `depends_on` (see [The data file](data-file.md)).
+belong to the project. Only normal dependencies are kept; dev-dependencies and
+build-dependencies are discarded, along with dependencies on outside libraries.
+The kept edges are recorded in `depends_on` (see [The data file](data-file.md)).

@@ -16,8 +16,8 @@ The program writes one JSON file. It contains a header and a list of crates.
       "depends_on": ["rustc_hir", "rustc_span"],    // own-project crates only
       "description": null,                          // filled from the separate file
       "modules": [
-        { "path": "ty",          "file": "compiler/rustc_middle/src/ty/mod.rs",     "submodules": ["ty::context"] },
-        { "path": "ty::context", "file": "compiler/rustc_middle/src/ty/context.rs", "submodules": [] }
+        { "path": "ty",          "file": "compiler/rustc_middle/src/ty/mod.rs",     "submodules": ["ty::context"], "description": null },
+        { "path": "ty::context", "file": "compiler/rustc_middle/src/ty/context.rs", "submodules": [],              "description": null }
       ]
     }
   ]
@@ -40,9 +40,10 @@ Each entry in `crates` has:
   Dependencies on outside libraries are not listed. See
   [Reading crates](reading-crates.md).
 - `modules` — the module tree. Each module has `path`, the `file` that defines
-  it, and `submodules`. See [Reading modules](reading-modules.md).
-- `description` — a sentence, or `null`. Filled from a separate file. See
-  [Descriptions](descriptions.md).
+  it, `submodules`, and its own `description`. See
+  [Reading modules](reading-modules.md).
+- `description` — a sentence, or `null`. Filled from a separate file. Both
+  crates and modules carry one. See [Descriptions](descriptions.md).
 
 ## Labels
 
