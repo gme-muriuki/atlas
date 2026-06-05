@@ -15,9 +15,9 @@ is produced as in [Reading crates](reading-crates.md) and
 [Reading modules](reading-modules.md), with no items. With it, the indexer also
 compiles each crate and folds item details into the module tree.
 
-Compiling requires a nightly toolchain and the crate's dependencies, which may
-be downloaded on first run. The pass targets normal-sized crates, not the
-compiler workspace itself.
+Compiling needs the crate's dependencies, which may be downloaded on first run;
+the unstable JSON output runs on any toolchain via `RUSTC_BOOTSTRAP=1`. The pass
+targets normal-sized crates, not the compiler workspace itself.
 
 ## Data source
 
@@ -25,7 +25,7 @@ For each crate the indexer runs rustdoc with JSON output and private items
 included, on the crate's primary target:
 
 ```
-cargo +nightly rustdoc -p <crate> --lib -- \
+RUSTC_BOOTSTRAP=1 cargo rustdoc -p <crate> --lib -- \
   -Z unstable-options --output-format json --document-private-items
 ```
 
@@ -55,12 +55,16 @@ final segment, matching the module tree built from source. Item ids derive from
 the module path, the item name, and the kind — not from rustdoc's internal ids,
 which are not stable across runs.
 
+Items defined directly at the crate root, not inside any submodule, are recorded
+on the crate's own `items` rather than on a module.
+
 ## Data file changes
 
-`module.items` (reserved in 0.1.0) is populated when the item pass runs. A new
-`Item` type carries the fields above. The change is additive, and the format
-version becomes `0.2.0`. The frontend accepts any `0.x` file and treats a module
-with no items as having none.
+`module.items` (reserved in 0.1.0) and a new `crate.items` (for crate-root
+items) are populated when the item pass runs. A new `Item` type carries the
+fields above. The change is additive, and the format version becomes `0.2.0`.
+The frontend accepts any `0.x` file and treats a module or crate with no items
+as having none.
 
 ## Failure handling
 

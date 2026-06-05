@@ -37,36 +37,45 @@ does all the source analysis.
 
 ## Running the indexer
 
-The indexer reads the project in the current directory (via
-`cargo metadata --no-deps`) and the crates' source files, then writes a data
-file. It needs no network access and no compiler components beyond Cargo.
+The `index` subcommand reads a project (via `cargo metadata --no-deps`) and its
+source files, then writes a data file. It needs no network access and no
+compiler components beyond Cargo.
 
 ```bash
 # Index the current project, writing atlas.json
-cargo run --bin rustc-atlas -- atlas.json
+cargo run --bin rustc-atlas -- index -o atlas.json
 ```
 
-To index a different project, build the binary once and run it from that
-project's directory:
+To index a different project, build the binary once and pass its path:
 
 ```bash
 cargo build --release
-cd /path/to/other/project
-/path/to/rustc-atlas/target/release/rustc-atlas atlas.json
+target/release/rustc-atlas index /path/to/other/project -o atlas.json
 ```
 
 ### Indexing the Rust compiler
 
-Point the binary at a `rust-lang/rust` checkout. Only the source files are read,
-so no build and no `rust-src`/`rustc-dev` components are required:
+Point the indexer at a `rust-lang/rust` checkout. Only the source files are
+read, so no build and no `rust-src`/`rustc-dev` components are required:
 
 ```bash
-cd /path/to/rust-lang/rust
-/path/to/rustc-atlas/target/release/rustc-atlas atlas.json
+target/release/rustc-atlas index /path/to/rust-lang/rust -o atlas.json
 ```
 
 This indexes every workspace member. A `--include` filter to narrow the output
 to the `rustc_*` crates is a planned addition.
+
+### Item details (`--with-items`)
+
+By default the indexer only reads source files. To also record the items inside
+each module — types, functions, signatures, and docs — pass `--with-items`. This
+compiles each crate with rustdoc, so it is slower, needs the crate's
+dependencies, and uses `RUSTC_BOOTSTRAP=1` to run rustdoc's JSON output on any
+toolchain. It suits normal-sized crates, not the compiler workspace.
+
+```bash
+cargo run --bin rustc-atlas -- index -o atlas.json --with-items
+```
 
 ## Viewing the map
 

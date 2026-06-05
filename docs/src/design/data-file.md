@@ -40,10 +40,13 @@ Each entry in `crates` has:
   Dependencies on outside libraries are not listed. See
   [Reading crates](reading-crates.md).
 - `modules` — the module tree. Each module has `path`, the `file` that defines
-  it, `submodules`, and its own `description`. See
+  it, `submodules`, its own `description`, and its `items`. See
   [Reading modules](reading-modules.md).
 - `description` — a sentence, or `null`. Filled from a separate file. Both
   crates and modules carry one. See [Descriptions](descriptions.md).
+- `items` — items defined at the crate root, present only when indexed with
+  `--with-items`. Modules carry their own `items` too. See
+  [Item inventory](item-inventory.md).
 
 ## Labels
 
