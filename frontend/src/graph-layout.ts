@@ -3,18 +3,18 @@ import type { Edge, Node } from '@xyflow/react';
 
 import type { Crate } from './atlas.ts';
 
-const NODE_WIDTH = 180;
-const NODE_HEIGHT = 44;
+const NODE_WIDTH = 220;
+const NODE_HEIGHT = 76;
 
 /**
  * Lay the crates out left-to-right with dagre and return React Flow nodes and
  * edges. An edge `a -> b` means crate `a` depends on crate `b`; edges to crates
- * outside the project are dropped.
+ * outside the project are dropped. Each node carries stat counts for its card.
  */
 export function layoutCrates(crates: Crate[]): { nodes: Node[]; edges: Edge[] } {
   const graph = new dagre.graphlib.Graph();
   graph.setDefaultEdgeLabel(() => ({}));
-  graph.setGraph({ rankdir: 'LR', nodesep: 24, ranksep: 80 });
+  graph.setGraph({ rankdir: 'LR', nodesep: 36, ranksep: 110 });
 
   const names = new Set(crates.map((crate) => crate.name));
   for (const crate of crates) {
@@ -35,10 +35,17 @@ export function layoutCrates(crates: Crate[]): { nodes: Node[]; edges: Edge[] } 
   // dagre gives node centres; React Flow positions by the top-left corner.
   const nodes: Node[] = crates.map((crate) => {
     const { x, y } = graph.node(crate.name);
+    const moduleItems = crate.modules.reduce((sum, module) => sum + (module.items?.length ?? 0), 0);
     return {
       id: crate.name,
+      type: 'crate',
       position: { x: x - NODE_WIDTH / 2, y: y - NODE_HEIGHT / 2 },
-      data: { label: crate.name },
+      data: {
+        label: crate.name,
+        deps: crate.depends_on.filter((dep) => names.has(dep)).length,
+        modules: crate.modules.length,
+        items: (crate.items?.length ?? 0) + moduleItems,
+      },
       width: NODE_WIDTH,
       height: NODE_HEIGHT,
     };

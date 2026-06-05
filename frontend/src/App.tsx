@@ -49,7 +49,9 @@ export function App() {
   return (
     <div className="app-graph">
       <header className="topbar">
-        <strong>rustc Atlas</strong>
+        <span className="brand">
+          rustc <span className="brand__rust">Atlas</span>
+        </span>
         <span className="source">
           {project ?? 'local project'}
           {commit ? ` @ ${commit}` : ''} — read with {read_with}

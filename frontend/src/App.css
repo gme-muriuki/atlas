@@ -1,21 +1,23 @@
 /* Centered states: loading and error. */
 .app {
-  max-width: 900px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 56px 24px;
 }
 
 .app h1 {
-  font-size: 28px;
-  margin: 0 0 4px;
-  color: var(--text-h);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 30px;
+  margin: 0 0 6px;
+  color: var(--text-hi);
 }
 
 .error {
-  color: #e05252;
+  color: #e07a6a;
 }
 
-/* Loaded state: top bar above a full-height graph. */
+/* Loaded state: top bar above a full-height graph + panel. */
 .app-graph {
   height: 100%;
   display: flex;
@@ -25,19 +27,29 @@
 .topbar {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--border);
+  gap: 14px;
+  padding: 13px 20px;
+  background: linear-gradient(180deg, var(--ink-850), var(--ink-900));
+  border-bottom: 1px solid var(--line);
+  z-index: 4;
 }
 
-.topbar strong {
-  color: var(--text-h);
+.brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.2px;
+  color: var(--text-hi);
+}
+
+.brand__rust {
+  color: var(--rust);
 }
 
 .source {
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 13px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
 
 .workspace {
@@ -50,4 +62,38 @@
   flex: 1;
   min-width: 0;
   min-height: 0;
+  position: relative;
+  background:
+    radial-gradient(1100px 540px at 28% -5%, rgba(224, 138, 79, 0.06), transparent 62%),
+    var(--ink-900);
+}
+
+/* React Flow chrome, themed. */
+.react-flow__controls {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.85);
+}
+
+.react-flow__controls-button {
+  background: var(--ink-750);
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+}
+
+.react-flow__controls-button:hover {
+  background: var(--ink-700);
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor;
+}
+
+.react-flow__attribution {
+  background: transparent;
+}
+
+.react-flow__attribution a {
+  color: var(--text-dim);
 }

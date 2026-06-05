@@ -15,6 +15,7 @@ export function ModulePanel({ crate, onClose }: ModulePanelProps) {
   return (
     <aside className="panel">
       <header className="panel-head">
+        <span className="panel-kicker">crate</span>
         <span className="panel-title">{crate.name}</span>
         <button
           type="button"
@@ -26,24 +27,31 @@ export function ModulePanel({ crate, onClose }: ModulePanelProps) {
         </button>
       </header>
 
-      {crate.description ? <p className="panel-desc">{crate.description}</p> : null}
+      <div className="panel-body">
+        {crate.description ? <p className="panel-desc">{crate.description}</p> : null}
 
-      {crateItems.length > 0 ? (
-        <section className="crate-items">
-          <h2 className="section-label">crate items</h2>
-          <ItemList items={crateItems} />
-        </section>
-      ) : null}
+        {crateItems.length > 0 ? (
+          <section className="panel-section">
+            <h2 className="section-label">crate items</h2>
+            <ItemList items={crateItems} />
+          </section>
+        ) : null}
 
-      {roots.length === 0 ? (
-        <p className="panel-empty">No modules.</p>
-      ) : (
-        <ul className="module-tree">
-          {roots.map((module) => (
-            <ModuleItem key={module.path} module={module} byPath={byPath} />
-          ))}
-        </ul>
-      )}
+        {roots.length > 0 ? (
+          <section className="panel-section">
+            <h2 className="section-label">modules</h2>
+            <ul className="module-tree">
+              {roots.map((module) => (
+                <ModuleItem key={module.path} module={module} byPath={byPath} />
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {roots.length === 0 && crateItems.length === 0 ? (
+          <p className="panel-empty">No modules or items.</p>
+        ) : null}
+      </div>
     </aside>
   );
 }
@@ -61,29 +69,32 @@ function ModuleItem({ module, byPath }: ModuleItemProps) {
   const items = module.items ?? [];
   const hasBody = children.length > 0 || items.length > 0;
 
-  const label = (
-    <>
+  const heading = (
+    <span className="module-head">
       <span className="module-name">{leaf}</span>
       {module.description ? <span className="module-desc">{module.description}</span> : null}
-    </>
+      {items.length > 0 ? <span className="module-count">{items.length}</span> : null}
+    </span>
   );
 
   if (!hasBody) {
-    return <li className="module-leaf">{label}</li>;
+    return <li className="module-leaf">{heading}</li>;
   }
 
   return (
     <li>
-      <details open>
-        <summary>{label}</summary>
-        {items.length > 0 ? <ItemList items={items} /> : null}
-        {children.length > 0 ? (
-          <ul className="module-tree">
-            {children.map((child) => (
-              <ModuleItem key={child.path} module={child} byPath={byPath} />
-            ))}
-          </ul>
-        ) : null}
+      <details className="module">
+        <summary>{heading}</summary>
+        <div className="module-children">
+          {items.length > 0 ? <ItemList items={items} /> : null}
+          {children.length > 0 ? (
+            <ul className="module-tree">
+              {children.map((child) => (
+                <ModuleItem key={child.path} module={child} byPath={byPath} />
+              ))}
+            </ul>
+          ) : null}
+        </div>
       </details>
     </li>
   );
@@ -97,11 +108,11 @@ function ItemList({ items }: { items: Item[] }) {
           key={`${item.kind}:${item.name}`}
           className={item.visibility === 'private' ? 'item item-private' : 'item'}
         >
-          <code className="item-sig">
+          <div className="item-row">
             <span className={`item-kind kind-${item.kind}`}>{item.kind}</span>
-            {item.signature ?? item.name}
-          </code>
-          {item.docs ? <span className="item-doc">{firstLine(item.docs)}</span> : null}
+            <code className="item-sig">{item.signature ?? item.name}</code>
+          </div>
+          {item.docs ? <p className="item-doc">{firstLine(item.docs)}</p> : null}
         </li>
       ))}
     </ul>
