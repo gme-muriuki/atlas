@@ -7,7 +7,7 @@
 use serde::{Deserialize, Serialize};
 
 /// The data file format version this crate reads and writes.
-pub const FORMAT_VERSION: &str = "0.1.0";
+pub const FORMAT_VERSION: &str = "0.2.0";
 
 /// A whole data file: a header and the crates of one project.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -55,4 +55,33 @@ pub struct Module {
     pub submodules: Vec<String>,
     /// A hand-written description, or `None`. Filled from the descriptions file.
     pub description: Option<String>,
+    /// The module's items, sorted by name. Empty unless the item pass ran
+    /// (see the item-inventory design); omitted from the data file when empty.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub items: Vec<Item>,
+}
+
+/// One item inside a module: a type, function, trait, and so on.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Item {
+    /// The item's name, e.g. `TyCtxt` or `build`.
+    pub name: String,
+    /// The item's kind: `struct`, `enum`, `trait`, `function`, `type_alias`,
+    /// `const`, `macro`, and so on.
+    pub kind: String,
+    /// A one-line declaration — a function signature or a type's header — or
+    /// `None` when rustdoc provides no concise form.
+    pub signature: Option<String>,
+    /// The item's doc comment, or `None`.
+    pub docs: Option<String>,
+    /// Whether the item is public or private.
+    pub visibility: Visibility,
+}
+
+/// Whether an item is exposed outside its crate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Visibility {
+    Public,
+    Private,
 }

@@ -79,6 +79,7 @@ impl Walker<'_> {
                             file: String::new(),
                             submodules: Vec::new(),
                             description: None,
+                            items: Vec::new(),
                         });
                     }
                 }
@@ -95,6 +96,7 @@ impl Walker<'_> {
             file: relative(file, self.root),
             submodules,
             description: None,
+            items: Vec::new(),
         });
     }
 }
