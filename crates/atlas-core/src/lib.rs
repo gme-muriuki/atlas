@@ -40,6 +40,10 @@ pub struct Crate {
     pub depends_on: Vec<String>,
     /// A hand-written description, or `None`. Filled from the descriptions file.
     pub description: Option<String>,
+    /// Items defined directly at the crate root (not in a submodule), sorted by
+    /// name. Empty unless the item pass ran; omitted from the data file when empty.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub items: Vec<Item>,
     /// The crate's modules, sorted by path.
     pub modules: Vec<Module>,
 }

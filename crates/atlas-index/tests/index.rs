@@ -15,6 +15,7 @@ fn run(output_name: &str) -> String {
 
     let status = Command::new(bin)
         .current_dir(fixture)
+        .args(["index", "-o"])
         .arg(&out_path)
         .status()
         .expect("run rustc-atlas");
