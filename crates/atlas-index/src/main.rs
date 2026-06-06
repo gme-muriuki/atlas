@@ -40,12 +40,35 @@ struct IndexArgs {
     /// Also compile each crate to include item details (types, functions, docs).
     #[arg(long)]
     with_items: bool,
+    /// Include path dependencies that live under the workspace root, not just
+    /// workspace members. Needed for repositories like rust-lang/rust where
+    /// compiler crates are path deps, not workspace members.
+    #[arg(long)]
+    local_deps: bool,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
     match Cli::parse().command {
         Commands::Index(args) => index(args),
     }
+}
+
+/// Run `cargo metadata` against `manifest`, with or without full dep resolution.
+///
+/// Without `local_deps` we pass `--no-deps` so no network access is needed and
+/// `packages` contains workspace members only. With `local_deps` we resolve the
+/// full graph so that path deps (e.g. the `rustc_*` crates in rust-lang/rust)
+/// appear in `packages`; the caller filters to those under the workspace root.
+fn collect_metadata(
+    manifest: &Path,
+    local_deps: bool,
+) -> Result<cargo_metadata::Metadata, Box<dyn Error>> {
+    let mut cmd = MetadataCommand::new();
+    cmd.manifest_path(manifest);
+    if !local_deps {
+        cmd.no_deps();
+    }
+    Ok(cmd.exec()?)
 }
 
 fn index(args: IndexArgs) -> Result<(), Box<dyn Error>> {
@@ -55,18 +78,20 @@ fn index(args: IndexArgs) -> Result<(), Box<dyn Error>> {
         args.path.clone()
     };
 
-    // Read the project's own crates and their declared dependencies, without
-    // resolving or downloading external crates.
-    let metadata = MetadataCommand::new()
-        .no_deps()
-        .manifest_path(&manifest)
-        .exec()?;
+    let metadata = collect_metadata(&manifest, args.local_deps)?;
     let project_root = metadata.workspace_root.as_std_path();
 
-    // With `--no-deps`, every listed package is a crate of this project.
-    let members: BTreeSet<&str> = metadata.packages.iter().map(|p| p.name.as_str()).collect();
+    // Local packages: workspace members, plus (with --local-deps) path deps
+    // whose Cargo.toml lives under the workspace root.
+    let local: Vec<&Package> = metadata
+        .packages
+        .iter()
+        .filter(|p| p.manifest_path.starts_with(&metadata.workspace_root))
+        .collect();
 
-    let mut packages: Vec<&Package> = metadata.packages.iter().collect();
+    let members: BTreeSet<&str> = local.iter().map(|p| p.name.as_str()).collect();
+
+    let mut packages: Vec<&Package> = local;
     packages.sort_by(|a, b| a.name.cmp(&b.name));
 
     let crates = packages
