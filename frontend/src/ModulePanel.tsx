@@ -1,18 +1,26 @@
 import { useState } from 'react';
 
 import type { Crate, Item, Module } from './atlas.ts';
-import { groupByKind, kindCounts, type KindCount } from './item-kinds.ts';
+import { groupByKind, kindColor, kindCounts, type KindCount } from './item-kinds.ts';
+import { SignatureLine } from './SignatureLine.tsx';
 import './ModulePanel.css';
 
 interface ModulePanelProps {
   crate: Crate;
   dependents: string[];
+  initialFilter: string;
   onSelect: (name: string) => void;
   onClose: () => void;
 }
 
-export function ModulePanel({ crate, dependents, onSelect, onClose }: ModulePanelProps) {
-  const [filter, setFilter] = useState('');
+export function ModulePanel({
+  crate,
+  dependents,
+  initialFilter,
+  onSelect,
+  onClose,
+}: ModulePanelProps) {
+  const [filter, setFilter] = useState(initialFilter);
   const query = filter.trim().toLowerCase();
 
   const byPath = new Map(crate.modules.map((module) => [module.path, module]));
@@ -141,7 +149,7 @@ function ItemGroups({ items }: { items: Item[] }) {
                 className={item.visibility === 'private' ? 'item item-private' : 'item'}
                 style={{ borderLeftColor: kindColor(item.kind) }}
               >
-                <code className="item-sig">{item.signature ?? item.name}</code>
+                <SignatureLine sig={item.signature ?? item.name} />
                 {item.docs ? <p className="item-doc">{firstLine(item.docs)}</p> : null}
               </li>
             ))}
@@ -212,8 +220,6 @@ function ConnRow({ label, names, onSelect }: ConnRowProps) {
     </div>
   );
 }
-
-const kindColor = (kind: string): string => `var(--k-${kind}, var(--text-dim))`;
 
 function firstLine(docs: string): string {
   return docs.split('\n', 1)[0];

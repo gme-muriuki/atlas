@@ -29,6 +29,9 @@ const KIND_LABEL: Record<string, string> = {
   proc_macro: 'Proc macros',
 };
 
+/** A CSS color for an item kind, falling back to the dim text colour. */
+export const kindColor = (kind: string): string => `var(--k-${kind}, var(--text-dim))`;
+
 export interface ItemGroup {
   kind: string;
   label: string;

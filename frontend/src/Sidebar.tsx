@@ -6,7 +6,6 @@ export function Sidebar() {
       <div className="nav-group">
         <span className="nav-group__label">Explore</span>
         <span className="nav-item is-active" aria-current="page">
-          <span className="nav-item__dot" />
           Crate map
         </span>
       </div>
@@ -15,7 +14,6 @@ export function Sidebar() {
         <span className="nav-group__label">Soon</span>
         {SOON.map((label) => (
           <span className="nav-item is-soon" key={label}>
-            <span className="nav-item__dot" />
             {label}
             <span className="nav-item__tag">soon</span>
           </span>

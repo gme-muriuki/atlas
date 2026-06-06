@@ -110,29 +110,21 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 7px 8px;
+  padding: 8px 12px;
   border-radius: 7px;
-  font-size: 13.5px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
   color: var(--text);
   border-left: 2px solid transparent;
   cursor: default;
 }
 
-.nav-item__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 2px;
-  background: var(--text-dim);
-  flex: none;
-}
-
 .nav-item.is-active {
   color: var(--text-hi);
+  font-weight: 600;
   background: var(--rust-soft);
   border-left-color: var(--rust);
-}
-.nav-item.is-active .nav-item__dot {
-  background: var(--rust);
 }
 
 .nav-item.is-soon {

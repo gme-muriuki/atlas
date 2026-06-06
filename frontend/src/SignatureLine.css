@@ -1,0 +1,22 @@
+.item-sig {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  /* Hanging indent so wrapped args line up after the opening paren. */
+  padding-left: 1.5em;
+  text-indent: -1.5em;
+}
+
+/* Token colours */
+.sig-kw       { color: var(--rust); }
+.sig-name     { color: var(--text-hi); font-weight: 600; }
+.sig-param    { color: var(--brass); }
+.sig-type     { color: var(--k-struct); }
+.sig-punct    { color: var(--text-dim); }
+.sig-arrow    { color: var(--rust); }
+.sig-ref      { color: var(--k-const); }
+.sig-lifetime { color: var(--k-macro); }
+.sig-dim      { color: var(--text-dim); }
