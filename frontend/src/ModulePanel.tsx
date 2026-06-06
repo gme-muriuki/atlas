@@ -6,10 +6,12 @@ import './ModulePanel.css';
 
 interface ModulePanelProps {
   crate: Crate;
+  dependents: string[];
+  onSelect: (name: string) => void;
   onClose: () => void;
 }
 
-export function ModulePanel({ crate, onClose }: ModulePanelProps) {
+export function ModulePanel({ crate, dependents, onSelect, onClose }: ModulePanelProps) {
   const [filter, setFilter] = useState('');
   const query = filter.trim().toLowerCase();
 
@@ -48,6 +50,8 @@ export function ModulePanel({ crate, onClose }: ModulePanelProps) {
 
       <div className="panel-body">
         {crate.description ? <p className="panel-desc">{crate.description}</p> : null}
+
+        <Connections dependsOn={crate.depends_on} dependents={dependents} onSelect={onSelect} />
 
         {crateItems.length > 0 ? (
           <section className="panel-section">
@@ -158,6 +162,54 @@ function KindDots({ counts }: { counts: KindCount[] }) {
         </span>
       ))}
     </span>
+  );
+}
+
+interface ConnectionsProps {
+  dependsOn: string[];
+  dependents: string[];
+  onSelect: (name: string) => void;
+}
+
+function Connections({ dependsOn, dependents, onSelect }: ConnectionsProps) {
+  if (dependsOn.length === 0 && dependents.length === 0) {
+    return null;
+  }
+  return (
+    <section className="panel-section conns">
+      <ConnRow label="Depends on" names={dependsOn} onSelect={onSelect} />
+      <ConnRow label="Used by" names={dependents} onSelect={onSelect} />
+    </section>
+  );
+}
+
+interface ConnRowProps {
+  label: string;
+  names: string[];
+  onSelect: (name: string) => void;
+}
+
+function ConnRow({ label, names, onSelect }: ConnRowProps) {
+  return (
+    <div className="conn-row">
+      <span className="conn-row__label">{label}</span>
+      {names.length > 0 ? (
+        <span className="conn-chips">
+          {names.map((name) => (
+            <button
+              type="button"
+              className="conn-chip"
+              key={name}
+              onClick={() => onSelect(name)}
+            >
+              {name}
+            </button>
+          ))}
+        </span>
+      ) : (
+        <span className="conn-empty">—</span>
+      )}
+    </div>
   );
 }
 

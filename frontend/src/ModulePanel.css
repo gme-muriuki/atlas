@@ -116,6 +116,60 @@
   margin-bottom: 18px;
 }
 
+/* Crate connections */
+.conns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.conn-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.conn-row__label {
+  flex: none;
+  width: 72px;
+  padding-top: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+}
+
+.conn-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.conn-chip {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text);
+  background: var(--ink-750);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition:
+    color 0.12s ease,
+    border-color 0.12s ease,
+    background 0.12s ease;
+}
+.conn-chip:hover {
+  color: var(--text-hi);
+  border-color: var(--rust);
+  background: var(--rust-soft);
+}
+
+.conn-empty {
+  color: var(--text-dim);
+}
+
 .section-label {
   font-size: 10px;
   font-weight: 600;

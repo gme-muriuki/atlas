@@ -47,6 +47,11 @@ export function App() {
 
   const { project, commit, read_with } = atlas.source;
   const selectedCrate = atlas.crates.find((crate) => crate.name === selected) ?? null;
+  const dependents = selectedCrate
+    ? atlas.crates
+        .filter((crate) => crate.depends_on.includes(selectedCrate.name))
+        .map((crate) => crate.name)
+    : [];
   const repoUrl = project ? `https://github.com/${project}` : null;
 
   return (
@@ -78,7 +83,13 @@ export function App() {
             <CrateGraph crates={atlas.crates} onSelectCrate={setSelected} />
           </div>
           {selectedCrate ? (
-            <ModulePanel crate={selectedCrate} onClose={() => setSelected(null)} />
+            <ModulePanel
+              key={selectedCrate.name}
+              crate={selectedCrate}
+              dependents={dependents}
+              onSelect={setSelected}
+              onClose={() => setSelected(null)}
+            />
           ) : null}
         </div>
       </main>
