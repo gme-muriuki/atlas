@@ -11,7 +11,7 @@ use cargo_metadata::{DependencyKind, MetadataCommand, Package, TargetKind};
 use clap::{Args, Parser, Subcommand};
 
 use crate::items::read_items;
-use crate::modules::read_modules;
+use crate::modules::read_source;
 
 #[derive(Parser)]
 #[command(
@@ -134,15 +134,18 @@ fn build_crate(
     depends_on.sort();
     depends_on.dedup();
 
-    let mut modules = crate_root(pkg)
-        .map(|root| read_modules(root.as_std_path(), project_root))
+    // The syn source-walk gives module tree and items (as written) with no
+    // build. Always run it; --with-items then swaps in rustdoc-resolved items.
+    let source = crate_root(pkg)
+        .map(|root| read_source(root.as_std_path(), project_root))
         .unwrap_or_default();
+    let mut modules = source.modules;
     modules.sort_by(|a, b| a.path.cmp(&b.path));
 
     let items = if with_items {
         add_items(pkg, project_root, &mut modules)
     } else {
-        Vec::new()
+        source.items
     };
 
     Crate {
