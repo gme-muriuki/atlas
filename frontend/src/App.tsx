@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import type { Atlas } from './atlas.ts';
 import { CrateGraph } from './CrateGraph.tsx';
 import { ModulePanel } from './ModulePanel.tsx';
+import { Sidebar } from './Sidebar.tsx';
+import { StatBar } from './StatBar.tsx';
 import { loadAtlas } from './load-atlas.ts';
 import './App.css';
 
@@ -45,26 +47,41 @@ export function App() {
 
   const { project, commit, read_with } = atlas.source;
   const selectedCrate = atlas.crates.find((crate) => crate.name === selected) ?? null;
+  const repoUrl = project ? `https://github.com/${project}` : null;
 
   return (
-    <div className="app-graph">
-      <header className="topbar">
+    <div className="shell">
+      <div className="shell__brand">
         <span className="brand">
           rustc <span className="brand__rust">Atlas</span>
         </span>
+      </div>
+
+      <header className="shell__top">
         <span className="source">
           {project ?? 'local project'}
-          {commit ? ` @ ${commit}` : ''} — read with {read_with}
+          {commit ? ` @ ${commit}` : ''} — {read_with}
         </span>
-      </header>
-      <div className="workspace">
-        <div className="graph-area">
-          <CrateGraph crates={atlas.crates} onSelectCrate={setSelected} />
-        </div>
-        {selectedCrate ? (
-          <ModulePanel crate={selectedCrate} onClose={() => setSelected(null)} />
+        {repoUrl ? (
+          <a className="top-link" href={repoUrl} target="_blank" rel="noreferrer">
+            GitHub ↗
+          </a>
         ) : null}
-      </div>
+      </header>
+
+      <Sidebar />
+
+      <main className="shell__main">
+        <StatBar atlas={atlas} />
+        <div className="workspace">
+          <div className="graph-area">
+            <CrateGraph crates={atlas.crates} onSelectCrate={setSelected} />
+          </div>
+          {selectedCrate ? (
+            <ModulePanel crate={selectedCrate} onClose={() => setSelected(null)} />
+          ) : null}
+        </div>
+      </main>
     </div>
   );
 }
