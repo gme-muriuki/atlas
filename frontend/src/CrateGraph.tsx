@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   Background,
   BackgroundVariant,
@@ -8,6 +8,7 @@ import {
   useEdgesState,
   useNodesState,
   type Node,
+  type ReactFlowInstance,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -42,12 +43,28 @@ export function CrateGraph({ crates, selected, onSelectCrate }: CrateGraphProps)
   const layout = useMemo(() => layoutCrates(crates), [crates]);
   const [nodes, setNodes, onNodesChange] = useNodesState(layout.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(layout.edges);
+  const instance = useRef<ReactFlowInstance | null>(null);
 
   // Re-seed when a different atlas is loaded.
   useEffect(() => {
     setNodes(layout.nodes);
     setEdges(layout.edges);
   }, [layout, setNodes, setEdges]);
+
+  // Bring the selected crate into view. A chip in the panel can select a node
+  // that is off-screen (and, with onlyRenderVisibleElements, not even rendered),
+  // so we pan to centre it at the current zoom regardless of where it sits.
+  useEffect(() => {
+    if (selected === null || !instance.current) return;
+    const node = layout.nodes.find((n) => n.id === selected);
+    if (!node) return;
+    const cx = node.position.x + (node.width ?? 0) / 2;
+    const cy = node.position.y + (node.height ?? 0) / 2;
+    instance.current.setCenter(cx, cy, {
+      zoom: instance.current.getViewport().zoom,
+      duration: 400,
+    });
+  }, [selected, layout]);
 
   // Highlight the selected crate's node and the edges touching it.
   useEffect(() => {
@@ -69,6 +86,10 @@ export function CrateGraph({ crates, selected, onSelectCrate }: CrateGraphProps)
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onNodeClick={(_event, node: Node) => onSelectCrate(node.id)}
+      onInit={(rf) => {
+        instance.current = rf;
+      }}
+      onlyRenderVisibleElements
       fitView
       fitViewOptions={{ padding: 0.28 }}
       minZoom={0.3}

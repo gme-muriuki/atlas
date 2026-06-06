@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 
 import './CrateNode.css';
@@ -9,7 +10,9 @@ interface CrateNodeData {
   items: number;
 }
 
-export function CrateNode({ data, selected }: NodeProps) {
+// Memoized: React Flow re-renders every node on each pan/zoom frame, so an
+// unmemoized card makes dragging a large graph (e.g. rustc's ~125 crates) janky.
+export const CrateNode = memo(function CrateNode({ data, selected }: NodeProps) {
   const { label, deps, modules, items } = data as unknown as CrateNodeData;
 
   return (
@@ -29,4 +32,4 @@ export function CrateNode({ data, selected }: NodeProps) {
       <Handle type="source" position={Position.Right} className="crate-node__port" />
     </div>
   );
-}
+});
