@@ -17,18 +17,28 @@ import { layoutCrates } from './graph-layout.ts';
 
 const nodeTypes = { crate: CrateNode };
 
-const defaultEdgeOptions = {
-  type: 'default',
-  style: { stroke: '#3a414e', strokeWidth: 1.5 },
-  markerEnd: { type: MarkerType.ArrowClosed, color: '#3a414e', width: 15, height: 15 },
-};
+const EDGE_IDLE = '#3a414e';
+const EDGE_ACTIVE = '#e08a4f';
+
+const edgeStyle = (active: boolean) => ({
+  style: { stroke: active ? EDGE_ACTIVE : EDGE_IDLE, strokeWidth: active ? 2 : 1.5 },
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+    color: active ? EDGE_ACTIVE : EDGE_IDLE,
+    width: 15,
+    height: 15,
+  },
+});
+
+const defaultEdgeOptions = { type: 'default', ...edgeStyle(false) };
 
 interface CrateGraphProps {
   crates: Crate[];
+  selected: string | null;
   onSelectCrate: (name: string) => void;
 }
 
-export function CrateGraph({ crates, onSelectCrate }: CrateGraphProps) {
+export function CrateGraph({ crates, selected, onSelectCrate }: CrateGraphProps) {
   const layout = useMemo(() => layoutCrates(crates), [crates]);
   const [nodes, setNodes, onNodesChange] = useNodesState(layout.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(layout.edges);
@@ -38,6 +48,17 @@ export function CrateGraph({ crates, onSelectCrate }: CrateGraphProps) {
     setNodes(layout.nodes);
     setEdges(layout.edges);
   }, [layout, setNodes, setEdges]);
+
+  // Highlight the selected crate's node and the edges touching it.
+  useEffect(() => {
+    setNodes((current) => current.map((node) => ({ ...node, selected: node.id === selected })));
+    setEdges((current) =>
+      current.map((edge) => {
+        const active = selected !== null && (edge.source === selected || edge.target === selected);
+        return { ...edge, ...edgeStyle(active) };
+      }),
+    );
+  }, [selected, setNodes, setEdges]);
 
   return (
     <ReactFlow

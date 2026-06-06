@@ -80,7 +80,7 @@ export function App() {
         <StatBar atlas={atlas} />
         <div className="workspace">
           <div className="graph-area">
-            <CrateGraph crates={atlas.crates} onSelectCrate={setSelected} />
+            <CrateGraph crates={atlas.crates} selected={selected} onSelectCrate={setSelected} />
           </div>
           {selectedCrate ? (
             <ModulePanel
