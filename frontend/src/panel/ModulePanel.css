@@ -162,8 +162,8 @@
 }
 .conn-chip:hover {
   color: var(--text-hi);
-  border-color: var(--rust);
-  background: var(--rust-soft);
+  border-color: var(--accent, var(--rust));
+  background: color-mix(in srgb, var(--accent, var(--rust)) 16%, transparent);
 }
 
 .conn-empty {

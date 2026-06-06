@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 
 import type { Crate, Item, Module } from '../data/atlas.ts';
 import { groupByKind, kindColor, kindCounts, type KindCount } from '../shared/item-kinds.ts';
@@ -185,8 +185,9 @@ function Connections({ dependsOn, dependents, onSelect }: ConnectionsProps) {
   }
   return (
     <section className="panel-section conns">
-      <ConnRow label="Depends on" names={dependsOn} onSelect={onSelect} />
-      <ConnRow label="Used by" names={dependents} onSelect={onSelect} />
+      {/* Accents match the graph edge colours: rust = depends on, blue = used by. */}
+      <ConnRow label="Depends on" names={dependsOn} accent="var(--rust)" onSelect={onSelect} />
+      <ConnRow label="Used by" names={dependents} accent="var(--k-struct)" onSelect={onSelect} />
     </section>
   );
 }
@@ -194,13 +195,16 @@ function Connections({ dependsOn, dependents, onSelect }: ConnectionsProps) {
 interface ConnRowProps {
   label: string;
   names: string[];
+  accent: string;
   onSelect: (name: string) => void;
 }
 
-function ConnRow({ label, names, onSelect }: ConnRowProps) {
+function ConnRow({ label, names, accent, onSelect }: ConnRowProps) {
   return (
-    <div className="conn-row">
-      <span className="conn-row__label">{label}</span>
+    <div className="conn-row" style={{ '--accent': accent } as CSSProperties}>
+      <span className="conn-row__label" style={{ color: accent }}>
+        {label}
+      </span>
       {names.length > 0 ? (
         <span className="conn-chips">
           {names.map((name) => (

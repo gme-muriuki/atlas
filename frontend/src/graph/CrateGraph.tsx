@@ -27,20 +27,33 @@ import { layoutKey, readCache, writeCache } from './layout-cache.ts';
 
 const nodeTypes = { crate: CrateNode };
 
-const EDGE_IDLE = '#3a414e';
-const EDGE_ACTIVE = '#e08a4f';
+// Relative to the selected crate: `depends` = an edge to a crate it depends on
+// (outgoing), `usedby` = an edge from a crate that depends on it (incoming).
+type EdgeState = 'idle' | 'depends' | 'usedby';
 
-const edgeStyle = (active: boolean) => ({
-  style: { stroke: active ? EDGE_ACTIVE : EDGE_IDLE, strokeWidth: active ? 2 : 1.5 },
-  markerEnd: {
-    type: MarkerType.ArrowClosed,
-    color: active ? EDGE_ACTIVE : EDGE_IDLE,
-    width: 15,
-    height: 15,
-  },
-});
+const EDGE_COLOR: Record<EdgeState, string> = {
+  idle: '#3a414e',
+  depends: '#e08a4f', // rust — what the selected crate depends on
+  usedby: '#6db3d6', // blue — crates that use the selected one
+};
 
-const defaultEdgeOptions = { type: 'default', ...edgeStyle(false) };
+const edgeStyle = (state: EdgeState) => {
+  const color = EDGE_COLOR[state];
+  return {
+    style: { stroke: color, strokeWidth: state === 'idle' ? 1.5 : 2 },
+    markerEnd: { type: MarkerType.ArrowClosed, color, width: 15, height: 15 },
+  };
+};
+
+const defaultEdgeOptions = { type: 'default', ...edgeStyle('idle') };
+
+/** An edge's state relative to the selected crate. */
+function edgeState(source: string, target: string, selected: string | null): EdgeState {
+  if (selected === null) return 'idle';
+  if (source === selected) return 'depends';
+  if (target === selected) return 'usedby';
+  return 'idle';
+}
 
 interface CrateGraphProps {
   crates: Crate[];
@@ -115,10 +128,7 @@ function GraphCanvas({ crates, input, positions, selected, onSelectCrate }: Grap
   useEffect(() => {
     setNodes((current) => current.map((node) => ({ ...node, selected: node.id === selected })));
     setEdges((current) =>
-      current.map((edge) => {
-        const active = selected !== null && (edge.source === selected || edge.target === selected);
-        return { ...edge, ...edgeStyle(active) };
-      }),
+      current.map((edge) => ({ ...edge, ...edgeStyle(edgeState(edge.source, edge.target, selected)) })),
     );
   }, [selected, setNodes, setEdges]);
 
