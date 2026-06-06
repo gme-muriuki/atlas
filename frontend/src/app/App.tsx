@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import type { Atlas } from './atlas.ts';
-import { CrateGraph } from './CrateGraph.tsx';
-import { ModulePanel } from './ModulePanel.tsx';
-import { Search } from './Search.tsx';
-import { Sidebar } from './Sidebar.tsx';
-import { StatBar } from './StatBar.tsx';
-import { loadAtlas } from './load-atlas.ts';
+import type { Atlas } from '../data/atlas.ts';
+import { CrateGraph } from '../graph/CrateGraph.tsx';
+import { ModulePanel } from '../panel/ModulePanel.tsx';
+import { Search } from '../search/Search.tsx';
+import { Sidebar } from '../shell/Sidebar.tsx';
+import { StatBar } from '../shell/StatBar.tsx';
+import { loadAtlas } from '../data/load-atlas.ts';
 import './App.css';
 
 export function App() {

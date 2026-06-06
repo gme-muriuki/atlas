@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
-import type { Atlas } from './atlas.ts';
-import { kindColor } from './item-kinds.ts';
+import type { Atlas } from '../data/atlas.ts';
+import { kindColor } from '../shared/item-kinds.ts';
 import './Search.css';
 
 interface SearchEntry {

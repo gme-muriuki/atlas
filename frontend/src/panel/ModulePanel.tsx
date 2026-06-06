@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import type { Crate, Item, Module } from './atlas.ts';
-import { groupByKind, kindColor, kindCounts, type KindCount } from './item-kinds.ts';
+import type { Crate, Item, Module } from '../data/atlas.ts';
+import { groupByKind, kindColor, kindCounts, type KindCount } from '../shared/item-kinds.ts';
 import { SignatureLine } from './SignatureLine.tsx';
 import './ModulePanel.css';
 

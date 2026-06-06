@@ -199,6 +199,33 @@
   position: relative;
 }
 
+/* Shown while the first layout for a graph computes in the worker. */
+.graph-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.graph-loading__spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  border-top-color: var(--rust);
+  animation: graph-spin 0.7s linear infinite;
+}
+
+@keyframes graph-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* React Flow chrome, themed. */
 .react-flow__controls {
   border: 1px solid var(--line);

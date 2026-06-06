@@ -1,4 +1,4 @@
-import type { Atlas } from './atlas.ts';
+import type { Atlas } from '../data/atlas.ts';
 
 interface StatBarProps {
   atlas: Atlas;

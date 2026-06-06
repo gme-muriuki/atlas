@@ -1,4 +1,4 @@
-import type { Item } from './atlas.ts';
+import type { Item } from '../data/atlas.ts';
 
 // Display order: types first, then traits, functions, then values/macros.
 export const KIND_ORDER = [
