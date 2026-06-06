@@ -146,10 +146,10 @@ function ItemGroups({ items }: { items: Item[] }) {
             {group.items.map((item) => (
               <li
                 key={`${item.kind}:${item.name}`}
-                className={item.visibility === 'private' ? 'item item-private' : 'item'}
+                className="item"
                 style={{ borderLeftColor: kindColor(item.kind) }}
               >
-                <SignatureLine sig={item.signature ?? item.name} />
+                <SignatureLine sig={displaySignature(item)} />
                 {item.docs ? <p className="item-doc">{firstLine(item.docs)}</p> : null}
               </li>
             ))}
@@ -158,6 +158,13 @@ function ItemGroups({ items }: { items: Item[] }) {
       ))}
     </div>
   );
+}
+
+/** The signature to show, prefixed with `pub` for public items so it reads
+ *  like the source declaration instead of carrying a separate badge. */
+function displaySignature(item: Item): string {
+  const sig = item.signature ?? item.name;
+  return item.visibility === 'public' ? `pub ${sig}` : sig;
 }
 
 function KindDots({ counts }: { counts: KindCount[] }) {

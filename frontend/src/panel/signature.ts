@@ -28,6 +28,15 @@ const TYPE_KEYWORDS = /^(mut|dyn|impl|unsafe|extern|for|const|static|move|async|
 // ---------------------------------------------------------------------------
 
 export function tokenizeSignature(sig: string): Token[] {
+  // A leading `pub` is the visibility prefix; colour it as a keyword and
+  // tokenize the declaration that follows.
+  if (sig.startsWith('pub ')) {
+    return [
+      { text: 'pub', kind: 'kw' },
+      { text: ' ', kind: 'dim' },
+      ...tokenizeSignature(sig.slice(4)),
+    ];
+  }
   if (sig.startsWith('fn ')) return tokenizeFn(sig);
   return tokenizeSimple(sig);
 }
