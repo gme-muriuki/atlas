@@ -19,6 +19,7 @@ use syn::{
 /// every module below it.
 #[derive(Default)]
 pub struct CrateSource {
+    pub description: Option<String>,
     pub items: Vec<Item>,
     pub modules: Vec<Module>,
 }
@@ -39,15 +40,17 @@ pub fn read_source(crate_root: &Path, project_root: &Path) -> CrateSource {
     let dir = crate_root.parent().unwrap_or(Path::new(".")).to_path_buf();
     let body = walker.walk_file(crate_root, &dir, "");
     CrateSource {
+        description: body.description,
         items: body.items,
         modules: walker.out,
     }
 }
 
-/// The contents of one module body: the submodules it declares and the items it
-/// defines directly.
+/// The contents of one module body: its `//!` description, the submodules it
+/// declares, and the items it defines directly.
 #[derive(Default)]
 struct Body {
+    description: Option<String>,
     submodules: Vec<String>,
     items: Vec<Item>,
 }
@@ -77,7 +80,13 @@ impl Walker<'_> {
                 return Body::default();
             }
         };
-        self.walk_items(&parsed.items, file, dir, prefix)
+        // The file's inner `//!` doc describes this module (or the crate, for
+        // the root file). Inline `mod foo { //! ... }` is not covered — syn does
+        // not surface inner attributes on inline modules — but rustc modules are
+        // almost all file-based.
+        let mut body = self.walk_items(&parsed.items, file, dir, prefix);
+        body.description = description_from(&parsed.attrs);
+        body
     }
 
     /// Walk a body of items — a whole file or an inline module's contents —
@@ -140,7 +149,7 @@ impl Walker<'_> {
             path,
             file: relative(file, self.root),
             submodules,
-            description: None,
+            description: body.description,
             items: body.items,
         });
     }
@@ -421,6 +430,14 @@ fn expr_to_string(expr: &Expr) -> String {
     }
 }
 
+/// The first paragraph of a `//!`/`///` doc — a concise summary used for a
+/// crate or module description. Returns `None` when undocumented.
+fn description_from(attrs: &[Attribute]) -> Option<String> {
+    let full = docs(attrs)?;
+    let para = full.split("\n\n").next().unwrap_or(&full).trim();
+    (!para.is_empty()).then(|| para.to_string())
+}
+
 /// The text of an item's doc comments (`///` and `#[doc = "..."]`), joined and
 /// trimmed, or `None` when undocumented.
 fn docs(attrs: &[Attribute]) -> Option<String> {
@@ -639,6 +656,36 @@ mod tests {
                 ("paint", "function", Some("fn paint(name: &str)")),
             ]
         );
+
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn descriptions_come_from_inner_docs_first_paragraph() {
+        let root = fresh_dir("desc");
+        write(
+            &root,
+            "src/lib.rs",
+            "//! The crate summary line.\n\
+             //!\n\
+             //! A second paragraph that should be dropped.\n\
+             pub mod sub;\n\
+             pub mod bare;\n",
+        );
+        write(&root, "src/sub.rs", "//! What sub does.\npub fn f() {}\n");
+        write(&root, "src/bare.rs", "pub fn g() {}\n"); // no //! doc
+
+        let source = read_source(&root.join("src/lib.rs"), &root);
+
+        // Crate description is the first paragraph of the root `//!`, no more.
+        assert_eq!(
+            source.description.as_deref(),
+            Some("The crate summary line.")
+        );
+
+        let map = by_path(&source.modules);
+        assert_eq!(map["sub"].description.as_deref(), Some("What sub does."));
+        assert_eq!(map["bare"].description, None);
 
         let _ = fs::remove_dir_all(&root);
     }

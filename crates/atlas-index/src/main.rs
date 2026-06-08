@@ -151,7 +151,7 @@ fn build_crate(
     Crate {
         name: pkg.name.to_string(),
         depends_on,
-        description: None,
+        description: source.description,
         items,
         modules,
     }
