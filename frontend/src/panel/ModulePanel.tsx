@@ -57,7 +57,7 @@ export function ModulePanel({
       </div>
 
       <div className="panel-body">
-        {crate.description ? <p className="panel-desc">{crate.description}</p> : null}
+        {crate.description ? <p className="panel-desc">{cleanDoc(crate.description)}</p> : null}
 
         <Connections dependsOn={crate.depends_on} dependents={dependents} onSelect={onSelect} />
 
@@ -103,21 +103,26 @@ function ModuleItem({ module, byPath, query }: ModuleItemProps) {
   const hasBody = items.length > 0 || children.length > 0;
   const counts = kindCounts(module.items ?? []);
 
-  const heading = (
-    <span className="module-head">
-      <span className="module-name">{leaf}</span>
-      {counts.length > 0 ? <KindDots counts={counts} /> : null}
+  const row = (
+    <span className="module-row">
+      <span className="module-head">
+        <span className="module-name">{leaf}</span>
+        {counts.length > 0 ? <KindDots counts={counts} /> : null}
+      </span>
+      {module.description ? (
+        <span className="module-desc">{summarize(module.description)}</span>
+      ) : null}
     </span>
   );
 
   if (!hasBody) {
-    return <li className="module-leaf">{heading}</li>;
+    return <li className="module-leaf">{row}</li>;
   }
 
   return (
     <li>
       <details className="module" open={query ? true : undefined}>
-        <summary>{heading}</summary>
+        <summary>{row}</summary>
         <div className="module-children">
           {items.length > 0 ? <ItemGroups items={items} /> : null}
           {children.length > 0 ? (
@@ -234,6 +239,25 @@ function ConnRow({ label, names, accent, onSelect }: ConnRowProps) {
 
 function firstLine(docs: string): string {
   return docs.split('\n', 1)[0];
+}
+
+/** Strip the bits of Markdown that read badly as plain text and collapse the
+ *  soft-wrapped newlines rustdoc inserts, so a doc reads as one clean run. */
+function cleanDoc(text: string): string {
+  return text
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // [text](url) -> text
+    .replace(/\[([^\]]+)\]/g, '$1') // [text] -> text
+    .replace(/`/g, '') // drop code-span backticks
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** A one-line summary: the first sentence of a cleaned doc. Module docs can run
+ *  to a whole paragraph, so we cut at the first sentence end. */
+function summarize(text: string): string {
+  const clean = cleanDoc(text);
+  const end = clean.search(/\.\s/);
+  return end === -1 ? clean : clean.slice(0, end + 1);
 }
 
 function itemMatches(item: Item, query: string): boolean {

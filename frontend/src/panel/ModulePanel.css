@@ -99,10 +99,9 @@
 }
 
 .panel-desc {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-style: italic;
-  line-height: 1.45;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 1.5;
   color: var(--text);
   margin: 0 0 18px;
 }
@@ -192,7 +191,7 @@
   list-style: none;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   padding: 5px 0;
 }
@@ -207,6 +206,7 @@
   flex: none;
   width: 0;
   height: 0;
+  margin-top: 5px;
   border-left: 5px solid var(--text-dim);
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
@@ -218,6 +218,26 @@
 
 .module-leaf {
   padding: 5px 0 5px 13px;
+}
+
+/* Name row plus its optional one-line description, stacked. */
+.module-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.module-desc {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-dim);
+  /* Wrap to two lines, then ellipsis — enough for a first sentence. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .module-head {
