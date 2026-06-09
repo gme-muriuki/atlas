@@ -1,0 +1,372 @@
+.pl {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Header ---------------------------------------------------------- */
+.pl-head {
+  padding: 4px 6px 0;
+  margin-bottom: 20px;
+}
+.pl-eyebrow {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 9px;
+}
+.pl-title {
+  margin: 0 0 9px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.02;
+  letter-spacing: 0.2px;
+  color: var(--text-hi);
+}
+.pl-sub {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+/* ---- The rail -------------------------------------------------------- */
+.pl-rail {
+  position: relative;
+  margin: 2px 0 4px;
+}
+/* The continuous line behind the nodes. */
+.pl-rail::before {
+  content: '';
+  position: absolute;
+  left: 21px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--line), var(--line-soft));
+}
+/* A pulse that travels the rail like data flowing through the compiler. */
+.pl-flow {
+  position: absolute;
+  left: 17px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--rust);
+  filter: blur(2px);
+  opacity: 0;
+  z-index: 0;
+  animation: pl-flow 7s linear infinite;
+}
+@keyframes pl-flow {
+  0% {
+    top: 8px;
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.85;
+  }
+  100% {
+    top: calc(100% - 8px);
+    opacity: 0;
+  }
+}
+
+/* ---- Endpoints (Source / Binary) ------------------------------------- */
+.pl-endpoint {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 22px;
+  padding-left: 46px;
+}
+.pl-endpoint--start {
+  margin-bottom: 4px;
+}
+.pl-endpoint--end {
+  margin-top: 4px;
+}
+.pl-endpoint__marker {
+  position: absolute;
+  left: 14px;
+  width: 16px;
+  height: 16px;
+  z-index: 1;
+}
+.pl-endpoint--start .pl-endpoint__marker {
+  border: 2px solid var(--text-dim);
+  border-radius: 50%;
+  background: var(--ink-850);
+}
+.pl-endpoint--end .pl-endpoint__marker {
+  border: 2px solid var(--line);
+  border-radius: 3px;
+  background: var(--ink-800);
+  transform: rotate(45deg);
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.pl-endpoint--end.is-reached .pl-endpoint__marker {
+  background: var(--rust);
+  border-color: var(--rust);
+  box-shadow: 0 0 0 4px var(--rust-soft);
+}
+.pl-endpoint__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ---- Stages ---------------------------------------------------------- */
+.pl-stages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pl-stage {
+  position: relative;
+  padding-left: 46px;
+  opacity: 0;
+  transform: translateX(-6px);
+  animation: pl-in 0.42s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+@keyframes pl-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pl-stage__node {
+  position: absolute;
+  left: 10px;
+  top: 5px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--ink-800);
+  border: 1.5px solid var(--line);
+  border-radius: 50%;
+  z-index: 1;
+  transition:
+    color 0.16s ease,
+    background 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+.pl-stage.is-visited .pl-stage__node {
+  color: var(--rust);
+  border-color: var(--rust-deep);
+}
+.pl-stage.is-active .pl-stage__node {
+  color: #1a1206;
+  background: var(--rust);
+  border-color: var(--rust);
+  box-shadow: 0 0 0 4px var(--rust-soft);
+}
+.pl-stage__trigger:hover ~ .pl-stage__node {
+  border-color: var(--rust);
+}
+
+.pl-stage__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 2px 8px 0;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+.pl-stage__title {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.1px;
+  color: var(--text);
+  transition: color 0.14s ease;
+}
+.pl-stage__trigger:hover .pl-stage__title,
+.pl-stage.is-active .pl-stage__title {
+  color: var(--text-hi);
+}
+.pl-stage__count {
+  flex: none;
+  font-size: 10px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+.pl-stage__chevron {
+  flex: none;
+  width: 0;
+  height: 0;
+  border-left: 4px solid var(--text-dim);
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  transition: transform 0.18s ease;
+}
+.pl-stage__trigger[aria-expanded='true'] .pl-stage__chevron {
+  transform: rotate(90deg);
+}
+
+/* ---- Expanding panel (stages and foundations share it) --------------- */
+.pl-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.26s ease;
+}
+.pl-panel[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+.pl-panel__inner {
+  overflow: hidden;
+}
+.pl-blurb {
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #98a1af;
+}
+.pl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 11px;
+}
+.pl-chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text);
+  background: var(--ink-750);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition:
+    color 0.12s ease,
+    background 0.12s ease,
+    border-color 0.12s ease,
+    transform 0.12s ease;
+}
+.pl-chip:hover {
+  color: var(--text-hi);
+  border-color: var(--rust);
+  background: var(--rust-soft);
+  transform: translateY(-1px);
+}
+.pl-chip.is-active {
+  color: #1a1206;
+  font-weight: 600;
+  background: var(--rust);
+  border-color: var(--rust);
+}
+.pl-guide {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--rust);
+  text-decoration: none;
+}
+.pl-guide span {
+  transition: transform 0.15s ease;
+}
+.pl-guide:hover span {
+  transform: translateX(3px);
+}
+
+/* ---- Foundations ----------------------------------------------------- */
+.pl-foundations {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-soft);
+}
+.pl-foundations__label {
+  display: block;
+  padding: 0 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.pl-foundations__hint {
+  margin: 7px 0 12px;
+  padding: 0 6px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+.pl-foundation {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 2px;
+}
+.pl-foundation::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 12px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+.pl-foundation__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 2px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+.pl-foundation__title {
+  flex: 1;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  transition: color 0.14s ease;
+}
+.pl-foundation__trigger:hover .pl-foundation__title {
+  color: var(--text-hi);
+}
+
+/* ---- Reduced motion -------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .pl-stage {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .pl-flow {
+    display: none;
+  }
+  .pl-panel {
+    transition: none;
+  }
+}

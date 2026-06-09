@@ -261,6 +261,22 @@
   border-left: 1px solid var(--line-soft);
 }
 
+/* Link out to a module's real source on GitHub. */
+.module-source {
+  display: inline-block;
+  margin: 2px 0 8px;
+  font-size: 11px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.12s ease;
+}
+.module-source:hover {
+  color: var(--rust);
+}
+.module-leaf .module-source {
+  margin: 1px 0 0 13px;
+}
+
 /* Kind-dot summary on a collapsed module */
 .kind-dots {
   margin-left: auto;

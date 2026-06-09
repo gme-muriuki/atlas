@@ -48,6 +48,7 @@ export function App() {
   }
 
   const { project, commit, read_with } = atlas.source;
+  const crateNames = new Set(atlas.crates.map((crate) => crate.name));
   const selectedCrate = atlas.crates.find((crate) => crate.name === selected) ?? null;
   const dependents = selectedCrate
     ? atlas.crates
@@ -88,7 +89,7 @@ export function App() {
         ) : null}
       </header>
 
-      <Sidebar />
+      <Sidebar crateNames={crateNames} selected={selected} onSelectCrate={selectCrate} />
 
       <main className="shell__main">
         <StatBar atlas={atlas} />
@@ -102,6 +103,7 @@ export function App() {
               crate={selectedCrate}
               dependents={dependents}
               initialFilter={focus}
+              source={atlas.source}
               onSelect={selectCrate}
               onClose={() => setSelected(null)}
             />

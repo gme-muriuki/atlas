@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from 'react';
 
-import type { Crate, Item, Module } from '../data/atlas.ts';
+import type { Crate, Item, Module, Source } from '../data/atlas.ts';
 import { groupByKind, kindColor, kindCounts, type KindCount } from '../shared/item-kinds.ts';
 import { SignatureLine } from './SignatureLine.tsx';
 import './ModulePanel.css';
@@ -9,6 +9,7 @@ interface ModulePanelProps {
   crate: Crate;
   dependents: string[];
   initialFilter: string;
+  source: Source;
   onSelect: (name: string) => void;
   onClose: () => void;
 }
@@ -17,6 +18,7 @@ export function ModulePanel({
   crate,
   dependents,
   initialFilter,
+  source,
   onSelect,
   onClose,
 }: ModulePanelProps) {
@@ -73,7 +75,13 @@ export function ModulePanel({
             <h2 className="section-label">modules</h2>
             <ul className="module-tree" key={query ? 'filtered' : 'all'}>
               {visibleRoots.map((module) => (
-                <ModuleItem key={module.path} module={module} byPath={byPath} query={query} />
+                <ModuleItem
+                  key={module.path}
+                  module={module}
+                  byPath={byPath}
+                  query={query}
+                  source={source}
+                />
               ))}
             </ul>
           </section>
@@ -91,9 +99,10 @@ interface ModuleItemProps {
   module: Module;
   byPath: Map<string, Module>;
   query: string;
+  source: Source;
 }
 
-function ModuleItem({ module, byPath, query }: ModuleItemProps) {
+function ModuleItem({ module, byPath, query, source }: ModuleItemProps) {
   const leaf = module.path.split('::').at(-1) ?? module.path;
   const items = filterItems(module.items ?? [], query);
   const allChildren = module.submodules
@@ -102,6 +111,7 @@ function ModuleItem({ module, byPath, query }: ModuleItemProps) {
   const children = query ? allChildren.filter((child) => moduleMatches(child, query, byPath)) : allChildren;
   const hasBody = items.length > 0 || children.length > 0;
   const counts = kindCounts(module.items ?? []);
+  const href = blobUrl(source, module.file);
 
   const row = (
     <span className="module-row">
@@ -115,8 +125,19 @@ function ModuleItem({ module, byPath, query }: ModuleItemProps) {
     </span>
   );
 
+  const sourceLink = href ? (
+    <a className="module-source" href={href} target="_blank" rel="noreferrer">
+      view source ↗
+    </a>
+  ) : null;
+
   if (!hasBody) {
-    return <li className="module-leaf">{row}</li>;
+    return (
+      <li className="module-leaf">
+        {row}
+        {sourceLink}
+      </li>
+    );
   }
 
   return (
@@ -124,11 +145,18 @@ function ModuleItem({ module, byPath, query }: ModuleItemProps) {
       <details className="module" open={query ? true : undefined}>
         <summary>{row}</summary>
         <div className="module-children">
+          {sourceLink}
           {items.length > 0 ? <ItemGroups items={items} /> : null}
           {children.length > 0 ? (
             <ul className="module-tree">
               {children.map((child) => (
-                <ModuleItem key={child.path} module={child} byPath={byPath} query={query} />
+                <ModuleItem
+                  key={child.path}
+                  module={child}
+                  byPath={byPath}
+                  query={query}
+                  source={source}
+                />
               ))}
             </ul>
           ) : null}
@@ -239,6 +267,15 @@ function ConnRow({ label, names, accent, onSelect }: ConnRowProps) {
 
 function firstLine(docs: string): string {
   return docs.split('\n', 1)[0];
+}
+
+/** A GitHub blob URL for a module's file at the indexed commit, or `null` when
+ *  the source isn't a known GitHub checkout or the file is unknown. */
+function blobUrl(source: Source, file: string): string | null {
+  if (!source.project || !source.commit || !file) {
+    return null;
+  }
+  return `https://github.com/${source.project}/blob/${source.commit}/${file}`;
 }
 
 /** Strip the bits of Markdown that read badly as plain text and collapse the

@@ -19,4 +19,5 @@
 - [Reading crates](design/reading-crates.md)
 - [Reading modules](design/reading-modules.md)
 - [Item inventory](design/item-inventory.md)
+- [Pipeline tour](design/pipeline-tour.md)
 - [Scope](design/scope.md)
