@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { Atlas } from '../data/atlas.ts';
 import { kindColor } from '../shared/item-kinds.ts';
@@ -26,6 +26,19 @@ const MAX_RESULTS = 40;
 export function Search({ atlas, onSelect }: SearchProps) {
   const [query, setQuery] = useState('');
   const index = useMemo(() => buildIndex(atlas), [atlas]);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Press "/" anywhere (outside a field) to jump into the search box.
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === '/' && !isTypingTarget(event.target)) {
+        event.preventDefault();
+        inputRef.current?.focus();
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   const trimmed = query.trim().toLowerCase();
   const results = trimmed
@@ -39,7 +52,20 @@ export function Search({ atlas, onSelect }: SearchProps) {
 
   return (
     <div className="search">
+      <svg className="search__icon" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="10.5" cy="10.5" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
+        <line
+          x1="15.5"
+          y1="15.5"
+          x2="21"
+          y2="21"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </svg>
       <input
+        ref={inputRef}
         type="search"
         className="search__input"
         placeholder="Search crates and items…"
@@ -48,11 +74,13 @@ export function Search({ atlas, onSelect }: SearchProps) {
         onKeyDown={(event) => {
           if (event.key === 'Escape') {
             setQuery('');
+            event.currentTarget.blur();
           } else if (event.key === 'Enter' && results.length > 0) {
             choose(results[0]);
           }
         }}
       />
+      {query === '' ? <kbd className="search__hint">/</kbd> : null}
       {results.length > 0 ? (
         <ul className="search__results">
           {results.map((entry) => {
@@ -103,4 +131,17 @@ function buildIndex(atlas: Atlas): SearchEntry[] {
 
 function itemEntry(name: string, kind: string, crate: string, location: string): SearchEntry {
   return { type: 'item', label: name, crate, term: name, tag: kind, location };
+}
+
+/** Whether an event target is a field that should receive a typed "/" itself. */
+function isTypingTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+  return (
+    target.tagName === 'INPUT' ||
+    target.tagName === 'TEXTAREA' ||
+    target.tagName === 'SELECT' ||
+    target.isContentEditable
+  );
 }
