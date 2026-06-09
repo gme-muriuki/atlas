@@ -77,10 +77,26 @@ export function App() {
       </div>
 
       <header className="shell__top">
-        <span className="source">
-          {project ?? 'local project'}
-          {commit ? ` @ ${commit}` : ''} — {read_with}
-        </span>
+        <div className="source">
+          {repoUrl ? (
+            <a className="source__repo" href={repoUrl} target="_blank" rel="noreferrer">
+              {project}
+            </a>
+          ) : (
+            <span className="source__repo">{project ?? 'local project'}</span>
+          )}
+          {project && commit ? (
+            <a
+              className="source__commit"
+              href={`https://github.com/${project}/commit/${commit}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {commit}
+            </a>
+          ) : null}
+          <span className="source__rustc">{read_with}</span>
+        </div>
         <Search atlas={atlas} onSelect={searchTo} />
         {repoUrl ? (
           <a className="top-link" href={repoUrl} target="_blank" rel="noreferrer">

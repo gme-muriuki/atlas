@@ -1,0 +1,59 @@
+.statbar {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--ink-850);
+  border-bottom: 1px solid var(--line);
+}
+
+.stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 13px 18px 13px 22px;
+  border-right: 1px solid var(--line-soft);
+  transition: background 0.16s ease;
+}
+.stat:last-child {
+  border-right: none;
+}
+
+/* A per-stat accent bar, echoing the item-card edges and the sidebar rail. */
+.stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15px;
+  bottom: 15px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0.55;
+  transition:
+    opacity 0.16s ease,
+    box-shadow 0.16s ease;
+}
+.stat:hover {
+  background: var(--ink-800);
+}
+.stat:hover::before {
+  opacity: 1;
+  box-shadow: 0 0 12px -1px var(--accent);
+}
+
+.stat__value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 25px;
+  line-height: 1;
+  letter-spacing: 0.3px;
+  color: var(--text-hi);
+  font-variant-numeric: tabular-nums;
+}
+.stat__label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: var(--text-dim);
+}
