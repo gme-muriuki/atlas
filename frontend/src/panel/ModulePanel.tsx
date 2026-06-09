@@ -78,7 +78,7 @@ export function ModulePanel({
         {crateItems.length > 0 ? (
           <section className="pm-section">
             <h3 className="pm-label">Crate items</h3>
-            <ItemGroups items={crateItems} />
+            <ItemGroups items={crateItems} file={crate.file} source={source} />
           </section>
         ) : null}
 
@@ -167,7 +167,7 @@ function ModuleItem({ module, byPath, query, source }: ModuleItemProps) {
         <summary>{row}</summary>
         <div className="module-children">
           {sourceLink}
-          {items.length > 0 ? <ItemGroups items={items} /> : null}
+          {items.length > 0 ? <ItemGroups items={items} file={module.file} source={source} /> : null}
           {children.length > 0 ? (
             <ul className="module-tree">
               {children.map((child) => (
@@ -187,7 +187,13 @@ function ModuleItem({ module, byPath, query, source }: ModuleItemProps) {
   );
 }
 
-function ItemGroups({ items }: { items: Item[] }) {
+interface ItemGroupsProps {
+  items: Item[];
+  file: string | undefined;
+  source: Source;
+}
+
+function ItemGroups({ items, file, source }: ItemGroupsProps) {
   return (
     <div className="item-groups">
       {groupByKind(items).map((group) => {
@@ -200,16 +206,30 @@ function ItemGroups({ items }: { items: Item[] }) {
               <span className="item-group__count">{group.items.length}</span>
             </div>
             <ul className="item-list">
-              {group.items.map((item) => (
-                <li
-                  key={`${item.kind}:${item.name}`}
-                  className="item"
-                  style={{ borderLeftColor: color }}
-                >
-                  <SignatureLine sig={displaySignature(item)} />
-                  {item.docs ? <p className="item-doc">{firstLine(item.docs)}</p> : null}
-                </li>
-              ))}
+              {group.items.map((item) => {
+                const href = itemUrl(source, file, item.line);
+                return (
+                  <li
+                    key={`${item.kind}:${item.name}`}
+                    className="item"
+                    style={{ borderLeftColor: color }}
+                  >
+                    {href ? (
+                      <a
+                        className="item__src"
+                        href={href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`View source of ${item.name}`}
+                      >
+                        ↗
+                      </a>
+                    ) : null}
+                    <SignatureLine sig={displaySignature(item)} />
+                    {item.docs ? <p className="item-doc">{firstLine(item.docs)}</p> : null}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         );
@@ -303,6 +323,16 @@ function blobUrl(source: Source, file: string): string | null {
     return null;
   }
   return `https://github.com/${source.project}/blob/${source.commit}/${file}`;
+}
+
+/** A GitHub blob URL anchored at an item's declaration line, or `null` when the
+ *  file or line is unknown. */
+function itemUrl(source: Source, file: string | undefined, line: number | undefined): string | null {
+  if (!file || !line) {
+    return null;
+  }
+  const base = blobUrl(source, file);
+  return base ? `${base}#L${line}` : null;
 }
 
 /** A GitHub tree URL for the crate's source directory — the common parent of its

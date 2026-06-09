@@ -55,6 +55,16 @@ function edgeState(source: string, target: string, selected: string | null): Edg
   return 'idle';
 }
 
+/** The crates directly connected to `id` by a dependency edge (either way). */
+function neighborsOf(edges: GraphInput['edges'], id: string): Set<string> {
+  const set = new Set<string>();
+  for (const [from, to] of edges) {
+    if (from === id) set.add(to);
+    else if (to === id) set.add(from);
+  }
+  return set;
+}
+
 interface CrateGraphProps {
   crates: Crate[];
   selected: string | null;
@@ -124,13 +134,29 @@ function GraphCanvas({ crates, input, positions, selected, onSelectCrate }: Grap
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const instance = useRef<ReactFlowInstance | null>(null);
 
-  // Highlight the selected crate's node and the edges touching it.
+  // Focus mode: with a crate selected, keep it and its direct neighbours bright
+  // and dim everything else, so the dense graph reads as "this crate's world".
   useEffect(() => {
-    setNodes((current) => current.map((node) => ({ ...node, selected: node.id === selected })));
-    setEdges((current) =>
-      current.map((edge) => ({ ...edge, ...edgeStyle(edgeState(edge.source, edge.target, selected)) })),
+    const neighbors = selected !== null ? neighborsOf(input.edges, selected) : null;
+    setNodes((current) =>
+      current.map((node) => {
+        const inFocus = neighbors === null || node.id === selected || neighbors.has(node.id);
+        return {
+          ...node,
+          selected: node.id === selected,
+          style: { ...node.style, opacity: inFocus ? 1 : 0.16 },
+        };
+      }),
     );
-  }, [selected, setNodes, setEdges]);
+    setEdges((current) =>
+      current.map((edge) => {
+        const state = edgeState(edge.source, edge.target, selected);
+        const base = edgeStyle(state);
+        const dim = neighbors !== null && state === 'idle';
+        return { ...edge, ...base, style: { ...base.style, opacity: dim ? 0.07 : 1 } };
+      }),
+    );
+  }, [selected, input, setNodes, setEdges]);
 
   // Bring the selected crate into view. A chip in the panel can select a node
   // that is off-screen (and, with onlyRenderVisibleElements, not even rendered),

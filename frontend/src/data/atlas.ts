@@ -15,6 +15,8 @@ export interface Source {
 
 export interface Crate {
   name: string;
+  // The crate's root source file, for linking crate-root items to their source.
+  file?: string;
   depends_on: string[];
   description: string | null;
   // Items defined at the crate root. Present only when indexed with --with-items.
@@ -39,6 +41,8 @@ export interface Item {
   signature: string | null;
   docs: string | null;
   visibility: Visibility;
+  // 1-based declaration line in the item's file, for source links.
+  line?: number;
 }
 
 // The major version of the data file format this app understands.

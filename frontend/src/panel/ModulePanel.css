@@ -297,10 +297,11 @@
 }
 
 .item {
+  position: relative;
   background: rgba(255, 255, 255, 0.022);
   border-left: 2px solid transparent;
   border-radius: 0 8px 8px 0;
-  padding: 9px 13px 10px 14px;
+  padding: 9px 26px 10px 14px;
   transition:
     background 0.12s ease,
     box-shadow 0.12s ease;
@@ -308,6 +309,28 @@
 .item:hover {
   background: rgba(255, 255, 255, 0.05);
   box-shadow: inset 0 0 0 1px var(--line-soft);
+}
+
+/* Source link to the item's exact line; revealed on hover. */
+.item__src {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--text-dim);
+  text-decoration: none;
+  opacity: 0;
+  transition:
+    opacity 0.12s ease,
+    color 0.12s ease;
+}
+.item:hover .item__src,
+.item__src:focus-visible {
+  opacity: 1;
+}
+.item__src:hover {
+  color: var(--rust);
 }
 .item-doc {
   margin: 6px 0 0;
