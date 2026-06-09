@@ -23,6 +23,11 @@ export interface Token {
 
 const TYPE_KEYWORDS = /^(mut|dyn|impl|unsafe|extern|for|const|static|move|async|self|where)\b/;
 
+// Non-breaking space (U+00A0): glues a leading keyword to the name that follows,
+// so a declaration head like `pub fn name` never wraps onto two lines — only the
+// arguments after the opening paren wrap.
+const NBSP = String.fromCharCode(160);
+
 // ---------------------------------------------------------------------------
 // Public entry point
 // ---------------------------------------------------------------------------
@@ -33,7 +38,7 @@ export function tokenizeSignature(sig: string): Token[] {
   if (sig.startsWith('pub ')) {
     return [
       { text: 'pub', kind: 'kw' },
-      { text: ' ', kind: 'dim' },
+      { text: NBSP, kind: 'dim' },
       ...tokenizeSignature(sig.slice(4)),
     ];
   }
@@ -53,7 +58,7 @@ function tokenizeSimple(sig: string): Token[] {
   const rest = sig.slice(spaceIdx + 1);
   const tokens: Token[] = [
     { text: kw, kind: 'kw' },
-    { text: ' ', kind: 'dim' },
+    { text: NBSP, kind: 'dim' },
   ];
 
   // "type Name = Type"
@@ -83,7 +88,10 @@ function tokenizeSimple(sig: string): Token[] {
 // ---------------------------------------------------------------------------
 
 function tokenizeFn(sig: string): Token[] {
-  const tokens: Token[] = [{ text: 'fn', kind: 'kw' }, { text: ' ', kind: 'dim' }];
+  const tokens: Token[] = [
+    { text: 'fn', kind: 'kw' },
+    { text: NBSP, kind: 'dim' },
+  ];
   const body = sig.slice(3); // strip "fn "
 
   const openIdx = body.indexOf('(');
