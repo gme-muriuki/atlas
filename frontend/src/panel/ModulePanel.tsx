@@ -33,46 +33,58 @@ export function ModulePanel({
   const visibleRoots = query ? roots.filter((module) => moduleMatches(module, query, byPath)) : roots;
   const nothing = crateItems.length === 0 && visibleRoots.length === 0;
 
+  const itemCount =
+    (crate.items?.length ?? 0) +
+    crate.modules.reduce((total, module) => total + (module.items?.length ?? 0), 0);
+  const browse = crateSourceUrl(source, crate);
+
   return (
     <aside className="panel">
-      <header className="panel-head">
-        <span className="panel-kicker">crate</span>
-        <span className="panel-title">{crate.name}</span>
-        <button
-          type="button"
-          className="panel-close"
-          onClick={onClose}
-          aria-label="Close panel"
-        >
-          ×
-        </button>
+      <header className="pm-head">
+        <div className="pm-head__bar">
+          <span className="pm-kicker">crate</span>
+          <button type="button" className="pm-close" onClick={onClose} aria-label="Close panel">
+            ×
+          </button>
+        </div>
+        <h2 className="pm-name">{crate.name}</h2>
+        {crate.description ? <p className="pm-lead">{cleanDoc(crate.description)}</p> : null}
+        <dl className="pm-stats">
+          <Stat value={crate.modules.length} label="modules" />
+          <Stat value={itemCount} label="items" />
+          <Stat value={crate.depends_on.length} label="depends" />
+          <Stat value={dependents.length} label="used by" />
+        </dl>
+        {browse ? (
+          <a className="pm-browse" href={browse} target="_blank" rel="noreferrer">
+            Browse source <span aria-hidden="true">↗</span>
+          </a>
+        ) : null}
       </header>
 
-      <div className="panel-filter">
+      <div className="pm-filter">
         <input
           type="search"
-          className="panel-filter__input"
+          className="pm-filter__input"
           placeholder="Filter items…"
           value={filter}
           onChange={(event) => setFilter(event.target.value)}
         />
       </div>
 
-      <div className="panel-body">
-        {crate.description ? <p className="panel-desc">{cleanDoc(crate.description)}</p> : null}
-
+      <div className="pm-body">
         <Connections dependsOn={crate.depends_on} dependents={dependents} onSelect={onSelect} />
 
         {crateItems.length > 0 ? (
-          <section className="panel-section">
-            <h2 className="section-label">crate items</h2>
+          <section className="pm-section">
+            <h3 className="pm-label">Crate items</h3>
             <ItemGroups items={crateItems} />
           </section>
         ) : null}
 
         {visibleRoots.length > 0 ? (
-          <section className="panel-section">
-            <h2 className="section-label">modules</h2>
+          <section className="pm-section">
+            <h3 className="pm-label">Modules</h3>
             <ul className="module-tree" key={query ? 'filtered' : 'all'}>
               {visibleRoots.map((module) => (
                 <ModuleItem
@@ -88,10 +100,19 @@ export function ModulePanel({
         ) : null}
 
         {nothing ? (
-          <p className="panel-empty">{query ? 'No items match.' : 'No modules or items.'}</p>
+          <p className="pm-empty">{query ? 'No items match.' : 'No modules or items.'}</p>
         ) : null}
       </div>
     </aside>
+  );
+}
+
+function Stat({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="pm-stat">
+      <dt className="pm-stat__value">{value.toLocaleString()}</dt>
+      <dd className="pm-stat__label">{label}</dd>
+    </div>
   );
 }
 
@@ -127,7 +148,7 @@ function ModuleItem({ module, byPath, query, source }: ModuleItemProps) {
 
   const sourceLink = href ? (
     <a className="module-source" href={href} target="_blank" rel="noreferrer">
-      view source ↗
+      view source <span aria-hidden="true">↗</span>
     </a>
   ) : null;
 
@@ -169,35 +190,32 @@ function ModuleItem({ module, byPath, query, source }: ModuleItemProps) {
 function ItemGroups({ items }: { items: Item[] }) {
   return (
     <div className="item-groups">
-      {groupByKind(items).map((group) => (
-        <div className="item-group" key={group.kind}>
-          <div className="item-group__label" style={{ color: kindColor(group.kind) }}>
-            {group.label}
-            <span className="item-group__count">{group.items.length}</span>
+      {groupByKind(items).map((group) => {
+        const color = kindColor(group.kind);
+        return (
+          <div className="item-group" key={group.kind}>
+            <div className="item-group__label" style={{ color }}>
+              <span className="item-group__dot" style={{ backgroundColor: color }} />
+              {group.label}
+              <span className="item-group__count">{group.items.length}</span>
+            </div>
+            <ul className="item-list">
+              {group.items.map((item) => (
+                <li
+                  key={`${item.kind}:${item.name}`}
+                  className="item"
+                  style={{ borderLeftColor: color }}
+                >
+                  <SignatureLine sig={displaySignature(item)} />
+                  {item.docs ? <p className="item-doc">{firstLine(item.docs)}</p> : null}
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="item-list">
-            {group.items.map((item) => (
-              <li
-                key={`${item.kind}:${item.name}`}
-                className="item"
-                style={{ borderLeftColor: kindColor(item.kind) }}
-              >
-                <SignatureLine sig={displaySignature(item)} />
-                {item.docs ? <p className="item-doc">{firstLine(item.docs)}</p> : null}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
-}
-
-/** The signature to show, prefixed with `pub` for public items so it reads
- *  like the source declaration instead of carrying a separate badge. */
-function displaySignature(item: Item): string {
-  const sig = item.signature ?? item.name;
-  return item.visibility === 'public' ? `pub ${sig}` : sig;
 }
 
 function KindDots({ counts }: { counts: KindCount[] }) {
@@ -224,49 +242,58 @@ function Connections({ dependsOn, dependents, onSelect }: ConnectionsProps) {
     return null;
   }
   return (
-    <section className="panel-section conns">
-      {/* Accents match the graph edge colours: rust = depends on, blue = used by. */}
-      <ConnRow label="Depends on" names={dependsOn} accent="var(--rust)" onSelect={onSelect} />
-      <ConnRow label="Used by" names={dependents} accent="var(--k-struct)" onSelect={onSelect} />
+    <section className="pm-section conns">
+      <ConnRow
+        label="Depends on"
+        arrow="→"
+        names={dependsOn}
+        accent="var(--rust)"
+        onSelect={onSelect}
+      />
+      <ConnRow
+        label="Used by"
+        arrow="←"
+        names={dependents}
+        accent="var(--k-struct)"
+        onSelect={onSelect}
+      />
     </section>
   );
 }
 
 interface ConnRowProps {
   label: string;
+  arrow: string;
   names: string[];
   accent: string;
   onSelect: (name: string) => void;
 }
 
-function ConnRow({ label, names, accent, onSelect }: ConnRowProps) {
+function ConnRow({ label, arrow, names, accent, onSelect }: ConnRowProps) {
   return (
     <div className="conn-row" style={{ '--accent': accent } as CSSProperties}>
-      <span className="conn-row__label" style={{ color: accent }}>
-        {label}
-      </span>
+      <div className="conn-row__head">
+        <span className="conn-row__arrow">{arrow}</span>
+        <span className="conn-row__label">{label}</span>
+        <span className="conn-row__count">{names.length}</span>
+      </div>
       {names.length > 0 ? (
-        <span className="conn-chips">
+        <div className="conn-chips">
           {names.map((name) => (
-            <button
-              type="button"
-              className="conn-chip"
-              key={name}
-              onClick={() => onSelect(name)}
-            >
+            <button type="button" className="conn-chip" key={name} onClick={() => onSelect(name)}>
               {name}
             </button>
           ))}
-        </span>
+        </div>
       ) : (
-        <span className="conn-empty">—</span>
+        <span className="conn-empty">none</span>
       )}
     </div>
   );
 }
 
 function firstLine(docs: string): string {
-  return docs.split('\n', 1)[0];
+  return cleanDoc(docs.split('\n', 1)[0]);
 }
 
 /** A GitHub blob URL for a module's file at the indexed commit, or `null` when
@@ -278,23 +305,60 @@ function blobUrl(source: Source, file: string): string | null {
   return `https://github.com/${source.project}/blob/${source.commit}/${file}`;
 }
 
-/** Strip the bits of Markdown that read badly as plain text and collapse the
- *  soft-wrapped newlines rustdoc inserts, so a doc reads as one clean run. */
+/** A GitHub tree URL for the crate's source directory — the common parent of its
+ *  module files — at the indexed commit, or `null` when unavailable. */
+function crateSourceUrl(source: Source, crate: Crate): string | null {
+  if (!source.project || !source.commit) {
+    return null;
+  }
+  const dir = commonDir(crate.modules.map((module) => module.file));
+  if (!dir) {
+    return null;
+  }
+  return `https://github.com/${source.project}/tree/${source.commit}/${dir}`;
+}
+
+/** The deepest directory shared by every file path (segment-wise). */
+function commonDir(files: string[]): string | null {
+  const dirs = files.filter(Boolean).map((file) => file.split('/').slice(0, -1));
+  if (dirs.length === 0) {
+    return null;
+  }
+  const [first, ...rest] = dirs;
+  let depth = first.length;
+  for (const parts of rest) {
+    let i = 0;
+    while (i < depth && parts[i] === first[i]) {
+      i += 1;
+    }
+    depth = i;
+  }
+  const dir = first.slice(0, depth).join('/');
+  return dir || null;
+}
+
+/** Strip the Markdown that reads badly as plain text and flatten soft-wraps. */
 function cleanDoc(text: string): string {
   return text
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // [text](url) -> text
-    .replace(/\[([^\]]+)\]/g, '$1') // [text] -> text
-    .replace(/`/g, '') // drop code-span backticks
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]+)\]/g, '$1')
+    .replace(/`/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 }
 
-/** A one-line summary: the first sentence of a cleaned doc. Module docs can run
- *  to a whole paragraph, so we cut at the first sentence end. */
+/** A one-line summary: the first sentence of a cleaned doc. */
 function summarize(text: string): string {
   const clean = cleanDoc(text);
   const end = clean.search(/\.\s/);
   return end === -1 ? clean : clean.slice(0, end + 1);
+}
+
+/** The signature to show, prefixed with `pub` for public items so it reads like
+ *  the source declaration instead of carrying a separate badge. */
+function displaySignature(item: Item): string {
+  const sig = item.signature ?? item.name;
+  return item.visibility === 'public' ? `pub ${sig}` : sig;
 }
 
 function itemMatches(item: Item, query: string): boolean {
