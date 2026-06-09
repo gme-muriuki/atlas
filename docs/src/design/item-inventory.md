@@ -33,9 +33,16 @@ Both sources populate the same fields:
   definition header. Generic parameters and where-clauses are omitted.
 - `docs` — the item's doc comment, or `null`.
 - `visibility` — `public` or `private`.
+- `line` — the 1-based line of the item's declaration in its file, or absent.
+  The frontend pairs it with the file to link an item to its exact source line.
 
 Both public and private items are included, so the internal machinery of a crate
 is present, not only its API surface.
+
+The line comes from the item name's span. The source walk reads it because the
+`proc-macro2` dependency is built with the `span-locations` feature; without it,
+spans carry no line information. An item's file is the module it lives in, or —
+for crate-root items — the crate's own root file, recorded as `Crate.file`.
 
 ## The rustdoc pass
 

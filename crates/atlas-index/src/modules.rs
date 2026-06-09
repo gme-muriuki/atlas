@@ -10,6 +10,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use atlas_core::{Item, Module, Visibility};
+use proc_macro2::Span;
 use syn::{
     Attribute, Expr, ExprLit, FnArg, GenericArgument, Item as SynItem, Lit, Meta, Pat,
     Path as SynPath, PathArguments, ReturnType, Signature, Type, TypeParamBound,
@@ -19,6 +20,8 @@ use syn::{
 /// every module below it.
 #[derive(Default)]
 pub struct CrateSource {
+    /// The crate root file, relative to the project root.
+    pub file: Option<String>,
     pub description: Option<String>,
     pub items: Vec<Item>,
     pub modules: Vec<Module>,
@@ -40,6 +43,7 @@ pub fn read_source(crate_root: &Path, project_root: &Path) -> CrateSource {
     let dir = crate_root.parent().unwrap_or(Path::new(".")).to_path_buf();
     let body = walker.walk_file(crate_root, &dir, "");
     CrateSource {
+        file: Some(relative(crate_root, project_root)),
         description: body.description,
         items: body.items,
         modules: walker.out,
@@ -156,7 +160,9 @@ impl Walker<'_> {
 }
 
 /// Build an atlas item from a syn item, or `None` for kinds we do not list
-/// (imports, impls, extern crates, macro invocations, …).
+/// (imports, impls, extern crates, macro invocations, …). The item's line comes
+/// from its name's span, available because proc-macro2 is built with
+/// `span-locations`.
 fn make_item(item: &SynItem) -> Option<Item> {
     match item {
         SynItem::Fn(f) => Some(build(
@@ -165,6 +171,7 @@ fn make_item(item: &SynItem) -> Option<Item> {
             Some(fn_signature(&f.sig)),
             vis_of(&f.vis),
             &f.attrs,
+            line_of(f.sig.ident.span()),
         )),
         SynItem::Struct(s) => Some(build(
             s.ident.to_string(),
@@ -172,6 +179,7 @@ fn make_item(item: &SynItem) -> Option<Item> {
             Some(format!("struct {}", s.ident)),
             vis_of(&s.vis),
             &s.attrs,
+            line_of(s.ident.span()),
         )),
         SynItem::Enum(e) => Some(build(
             e.ident.to_string(),
@@ -179,6 +187,7 @@ fn make_item(item: &SynItem) -> Option<Item> {
             Some(format!("enum {}", e.ident)),
             vis_of(&e.vis),
             &e.attrs,
+            line_of(e.ident.span()),
         )),
         SynItem::Union(u) => Some(build(
             u.ident.to_string(),
@@ -186,6 +195,7 @@ fn make_item(item: &SynItem) -> Option<Item> {
             Some(format!("union {}", u.ident)),
             vis_of(&u.vis),
             &u.attrs,
+            line_of(u.ident.span()),
         )),
         SynItem::Trait(t) => Some(build(
             t.ident.to_string(),
@@ -193,6 +203,7 @@ fn make_item(item: &SynItem) -> Option<Item> {
             Some(format!("trait {}", t.ident)),
             vis_of(&t.vis),
             &t.attrs,
+            line_of(t.ident.span()),
         )),
         SynItem::TraitAlias(t) => Some(build(
             t.ident.to_string(),
@@ -204,6 +215,7 @@ fn make_item(item: &SynItem) -> Option<Item> {
             )),
             vis_of(&t.vis),
             &t.attrs,
+            line_of(t.ident.span()),
         )),
         SynItem::Type(t) => Some(build(
             t.ident.to_string(),
@@ -211,6 +223,7 @@ fn make_item(item: &SynItem) -> Option<Item> {
             Some(format!("type {} = {}", t.ident, type_to_string(&t.ty))),
             vis_of(&t.vis),
             &t.attrs,
+            line_of(t.ident.span()),
         )),
         SynItem::Const(c) => Some(build(
             c.ident.to_string(),
@@ -218,6 +231,7 @@ fn make_item(item: &SynItem) -> Option<Item> {
             Some(format!("const {}: {}", c.ident, type_to_string(&c.ty))),
             vis_of(&c.vis),
             &c.attrs,
+            line_of(c.ident.span()),
         )),
         SynItem::Static(s) => Some(build(
             s.ident.to_string(),
@@ -225,6 +239,7 @@ fn make_item(item: &SynItem) -> Option<Item> {
             Some(format!("static {}: {}", s.ident, type_to_string(&s.ty))),
             vis_of(&s.vis),
             &s.attrs,
+            line_of(s.ident.span()),
         )),
         SynItem::Macro(m) => {
             // Only `macro_rules! name` defines a named macro; bare invocations
@@ -236,6 +251,7 @@ fn make_item(item: &SynItem) -> Option<Item> {
                 Some(format!("macro_rules! {ident}")),
                 macro_vis(&m.attrs),
                 &m.attrs,
+                line_of(ident.span()),
             ))
         }
         _ => None,
@@ -248,6 +264,7 @@ fn build(
     signature: Option<String>,
     visibility: Visibility,
     attrs: &[Attribute],
+    line: Option<u32>,
 ) -> Item {
     Item {
         name,
@@ -255,7 +272,17 @@ fn build(
         signature,
         docs: docs(attrs),
         visibility,
+        line,
     }
+}
+
+/// The 1-based declaration line of a span. Available because proc-macro2 is
+/// built with the `span-locations` feature; the parse is from a file, so spans
+/// resolve to real source positions.
+fn line_of(span: Span) -> Option<u32> {
+    u32::try_from(span.start().line)
+        .ok()
+        .filter(|line| *line > 0)
 }
 
 /// Syntactic visibility: a `pub` keyword is public, everything else (including

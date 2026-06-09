@@ -105,6 +105,10 @@ fn make_item(item: &RdItem) -> Option<Item> {
         signature,
         docs: item.docs.clone(),
         visibility: visibility_of(&item.visibility),
+        line: item
+            .span
+            .as_ref()
+            .and_then(|span| u32::try_from(span.begin.0).ok()),
     })
 }
 

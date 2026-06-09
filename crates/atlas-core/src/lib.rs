@@ -36,6 +36,11 @@ pub struct Source {
 pub struct Crate {
     /// The crate name, which is also its label.
     pub name: String,
+    /// The crate's root source file (`lib.rs` / `main.rs`), relative to the
+    /// project root. Used to link crate-root items to their source. `None` when
+    /// the root file is unknown.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub file: Option<String>,
     /// The project's own crates this crate depends on, sorted.
     pub depends_on: Vec<String>,
     /// A hand-written description, or `None`. Filled from the descriptions file.
@@ -80,6 +85,10 @@ pub struct Item {
     pub docs: Option<String>,
     /// Whether the item is public or private.
     pub visibility: Visibility,
+    /// The 1-based line of the item's declaration in its file, for source links.
+    /// `None` when the line is unknown.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub line: Option<u32>,
 }
 
 /// Whether an item is exposed outside its crate.

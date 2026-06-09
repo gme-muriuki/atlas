@@ -66,6 +66,7 @@ dependencies = [
  "atlas-core",
  "cargo_metadata",
  "clap",
+ "proc-macro2",
  "rustdoc-types",
  "serde_json",
  "syn",

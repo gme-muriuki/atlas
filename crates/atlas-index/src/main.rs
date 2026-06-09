@@ -150,6 +150,7 @@ fn build_crate(
 
     Crate {
         name: pkg.name.to_string(),
+        file: source.file,
         depends_on,
         description: source.description,
         items,
